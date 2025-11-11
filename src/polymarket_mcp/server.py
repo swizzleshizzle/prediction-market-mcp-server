@@ -67,7 +67,7 @@ async def list_tools() -> list[types.Tool]:
     tools.extend(portfolio_integration.get_portfolio_tool_definitions())
 
     # Add real-time websocket tools
-    tools.extend(realtime.get_tool_definitions())
+    tools.extend(realtime.get_tools())
 
     return tools
 
