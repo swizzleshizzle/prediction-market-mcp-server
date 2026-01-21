@@ -1,0 +1,1 @@
+"""Kalshi platform tests."""

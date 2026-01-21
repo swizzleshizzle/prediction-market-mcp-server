@@ -97,10 +97,14 @@ async def async_cleanup():
         task.cancel()
 
 
-# Configure pytest-benchmark
-def pytest_benchmark_update_json(config, benchmarks, output_json):
-    """Customize benchmark JSON output."""
-    output_json["environment"] = {
-        "python_version": os.sys.version,
-        "platform": os.sys.platform,
-    }
+# Configure pytest-benchmark (only if pytest-benchmark is installed)
+try:
+    import pytest_benchmark
+    def pytest_benchmark_update_json(config, benchmarks, output_json):
+        """Customize benchmark JSON output."""
+        output_json["environment"] = {
+            "python_version": os.sys.version,
+            "platform": os.sys.platform,
+        }
+except ImportError:
+    pass

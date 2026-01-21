@@ -10,7 +10,8 @@
       "Bash(dir:*)",
       "Bash(pip install:*)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor: establish multi-platform architecture\n\n- Create prediction_mcp package structure\n- Add PlatformAdapter base class with normalized data models\n- Define NormalizedMarket, NormalizedOrder, NormalizedPosition\n- Update pyproject.toml with Kalshi and Redis dependencies\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor: establish multi-platform architecture\n\n- Create prediction_mcp package structure\n- Add PlatformAdapter base class with normalized data models\n- Define NormalizedMarket, NormalizedOrder, NormalizedPosition\n- Update pyproject.toml with Kalshi and Redis dependencies\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)"
     ]
   }
 }
