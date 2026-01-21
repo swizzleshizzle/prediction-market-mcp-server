@@ -44,11 +44,6 @@ See [docs/plans/](docs/plans/) for detailed roadmap.
 
 Forked and extended by **[swizzleshizzle](https://github.com/swizzleshizzle)** for multi-platform support
 
-Developed in collaboration with:
-- 🌾 **[Yield Hacker](https://opensea.io/collection/yield-hacker-pass-yhp)** - DeFi Innovation Community
-- 💰 **[Renda Cripto](https://rendacripto.com.br/)** - Crypto Trading Community
-- 🏗️ **[Cultura Builder](https://culturabuilder.com/)** - Builder Culture Community
-
 Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 
 ---
