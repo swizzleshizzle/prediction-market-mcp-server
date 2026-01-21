@@ -10,5 +10,6 @@ Tool modules organized by category:
 """
 
 from . import market_discovery
+from . import market_analysis
 
-__all__ = ["market_discovery"]
+__all__ = ["market_discovery", "market_analysis"]
