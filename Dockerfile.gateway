@@ -1,0 +1,36 @@
+# Polymarket MCP Server with SSE Gateway
+# Combines the MCP server with supergateway for remote access
+
+FROM python:3.12-slim
+
+# Install Node.js for supergateway
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy and install Python dependencies
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+
+RUN pip install --no-cache-dir build && \
+    python -m build --wheel && \
+    pip install --no-cache-dir dist/*.whl && \
+    rm -rf dist/ build/
+
+# Install supergateway globally
+RUN npm install -g supergateway
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    LOG_LEVEL=INFO \
+    PORT=8089
+
+EXPOSE 8089
+
+# Run supergateway wrapping the MCP server
+CMD ["sh", "-c", "supergateway --stdio 'python -m polymarket_mcp.server' --port ${PORT}"]
