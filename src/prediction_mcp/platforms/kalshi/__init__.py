@@ -9,5 +9,6 @@ API: REST + WebSocket
 """
 
 from .config import KalshiConfig, load_kalshi_config
+from .auth import KalshiAuth
 
-__all__ = ["KalshiConfig", "load_kalshi_config"]
+__all__ = ["KalshiConfig", "load_kalshi_config", "KalshiAuth"]
