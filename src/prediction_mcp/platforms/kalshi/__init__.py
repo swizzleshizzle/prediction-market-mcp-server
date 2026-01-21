@@ -10,5 +10,12 @@ API: REST + WebSocket
 
 from .config import KalshiConfig, load_kalshi_config
 from .auth import KalshiAuth
+from .client import KalshiClient, create_kalshi_client
 
-__all__ = ["KalshiConfig", "load_kalshi_config", "KalshiAuth"]
+__all__ = [
+    "KalshiConfig",
+    "load_kalshi_config",
+    "KalshiAuth",
+    "KalshiClient",
+    "create_kalshi_client",
+]
