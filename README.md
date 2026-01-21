@@ -1,30 +1,128 @@
-# 🤖 Polymarket MCP Server
+# 🤖 Multi-Platform Prediction Market MCP Server
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP Protocol](https://img.shields.io/badge/MCP-1.0-purple.svg)](https://modelcontextprotocol.io)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](#testing)
+[![Status](https://img.shields.io/badge/status-Phase_1_WIP-yellow.svg)](#-project-status)
 
-**Complete AI-Powered Trading Platform for Polymarket Prediction Markets**
+**🚧 Work In Progress: Evolving to Support Multiple Prediction Markets + Cross-Platform Arbitrage 🚧**
 
-Enable Claude to autonomously trade, analyze, and manage positions on Polymarket with 45 comprehensive tools, real-time WebSocket monitoring, and enterprise-grade safety features.
+Unified AI-powered trading platform for Polymarket and Kalshi prediction markets, with cross-platform arbitrage capabilities and foundation for autonomous AI agents.
+
+---
+
+## 📢 Project Status
+
+### ✅ **Current (v0.1.0)**: Polymarket Full Support
+- **45 comprehensive tools** for Polymarket
+- Real-time WebSocket monitoring
+- Enterprise-grade safety features
+- Production-ready trading
+
+### 🚧 **Phase 1 (In Progress)**: Multi-Platform Foundation
+Building the architecture to support multiple platforms:
+- ✅ Platform adapter architecture designed
+- 🔄 Kalshi API integration (20+ tools)
+- 🔄 Redis Stack data layer
+- 🔄 Normalized data models
+- 📅 Target: 21 Kalshi tools operational
+
+### 🔮 **Future Phases**: Full Multi-Platform Ecosystem
+- **Phase 2**: Complete Kalshi parity (52 tools)
+- **Phase 3**: Cross-platform market matching
+- **Phase 4**: Arbitrage engine with strategy execution
+- **Phase 5**: AI agent foundation for autonomous trading
+- **Phase 6**: Production polish and deployment
+
+See [docs/plans/](docs/plans/) for detailed roadmap.
 
 ---
 
 ## 👨‍💻 Created By
 
-**[Caio Vicentino](https://github.com/caiovicentino)**
+**[Caio Vicentino](https://github.com/caiovicentino)** (Original Polymarket implementation)
 
-Developed in collaboration with:
-- 🌾 **[Yield Hacker](https://opensea.io/collection/yield-hacker-pass-yhp)** - DeFi Innovation Community
-- 💰 **[Renda Cripto](https://rendacripto.com.br/)** - Crypto Trading Community
-- 🏗️ **[Cultura Builder](https://culturabuilder.com/)** - Builder Culture Community
+Forked and extended by **[swizzleshizzle](https://github.com/swizzleshizzle)** for multi-platform support
 
 Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 
 ---
 
-## ⭐ Key Features
+## 🎯 Vision: Multi-Platform Arbitrage System
+
+### Architecture Goals
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MULTI-PLATFORM MCP SERVER                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  LAYER 1: PLATFORM-SPECIFIC TOOLS                               │
+│  ─────────────────────────────────                              │
+│  ┌──────────────────────┐  ┌──────────────────────┐            │
+│  │    Polymarket        │  │      Kalshi          │            │
+│  │    45 Tools ✅       │  │   52 Tools 🚧        │            │
+│  │  • Market Discovery  │  │  • Market Discovery  │            │
+│  │  • Analysis          │  │  • Events/Series     │            │
+│  │  • Trading           │  │  • Trading           │            │
+│  │  • Portfolio         │  │  • Portfolio         │            │
+│  │  • Real-time         │  │  • Real-time         │            │
+│  └──────────────────────┘  └──────────────────────┘            │
+│                                                                 │
+│  LAYER 2: CROSS-PLATFORM TOOLS (Phase 3) 📅                    │
+│  ──────────────────────────────────────                         │
+│  • search_all_markets        • compare_prices                   │
+│  • find_equivalent_markets   • aggregate_liquidity              │
+│  • create_market_pair        • unified_portfolio                │
+│                                                                 │
+│  LAYER 3: ARBITRAGE TOOLS (Phase 4) 📅                         │
+│  ────────────────────────────────────                           │
+│  • scan_price_discrepancies  • execute_strategy                 │
+│  • scan_calendar_spreads     • monitor_positions                │
+│  • create_strategy           • force_exit                       │
+│                                                                 │
+│  DATA LAYER: Redis Stack 🚧                                     │
+│  ───────────────────────                                        │
+│  • JSON documents    • Vector search (AI matching)              │
+│  • Time series       • Pub/sub (real-time)                      │
+│  • Full-text search  • Strategy persistence                     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### What's Coming
+
+#### Cross-Platform Arbitrage
+Identify and exploit price discrepancies across platforms:
+- **Price Arbitrage**: Same market, different prices
+- **Calendar Spreads**: Same underlying, different dates
+- **Hedging**: Lock in profit with opposing positions
+
+#### Hybrid Market Matching
+- **Automatic**: AI-powered similarity matching (>95% confidence)
+- **Semi-Automatic**: AI suggests, you confirm (>80% confidence)
+- **Manual**: Explicit market pairs for complex relationships
+
+#### Strategy Engine
+Full lifecycle management:
+- Strategy creation from detected opportunities
+- Multi-leg position sizing (Kelly criterion, fixed, etc.)
+- Entry/exit condition monitoring
+- Risk management and stop-loss
+- Simultaneous or sequential execution modes
+
+#### AI Agent Foundation (Phase 5)
+Architecture ready for autonomous operation:
+- **Observer Mode**: Monitor and log opportunities
+- **Advisor Mode**: Propose strategies, human executes
+- **Semi-Autonomous**: Auto-execute under thresholds
+- **Autonomous**: Full execution with safety limits
+
+All through the **same MCP interface** you use!
+
+---
+
+## ⭐ Current Features (Polymarket - Fully Operational)
 
 ### 🎯 45 Comprehensive Tools Across 5 Categories
 
@@ -44,8 +142,6 @@ Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 - Category-specific markets (Politics, Sports, Crypto)
 - Markets closing soon alerts
 - Featured and promoted markets
-- Sports markets (NBA, NFL, etc.)
-- Crypto prediction markets
 
 #### 📊 Market Analysis (10 tools)
 - Real-time prices and spreads
@@ -54,9 +150,7 @@ Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 - Historical price data
 - **AI-powered opportunity analysis** with BUY/SELL/HOLD recommendations
 - Multi-market comparison
-- Top holders analysis
 - Risk assessment and scoring
-- Spread calculation and monitoring
 
 #### 💼 Trading (12 tools)
 - **Limit orders** (GTC, GTD, FOK, FAK)
@@ -64,11 +158,9 @@ Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 - Batch order submission
 - **AI-suggested pricing** (aggressive/passive/mid strategies)
 - Order status tracking and history
-- Open orders management
 - Single and bulk order cancellation
 - **Smart trade execution** (natural language → automated strategy)
 - **Position rebalancing** with slippage protection
-- Order book integration
 
 #### 📈 Portfolio Management (8 tools)
 - Real-time position tracking
@@ -76,18 +168,15 @@ Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 - Portfolio value aggregation
 - **Risk analysis** (concentration, liquidity, diversification)
 - Trade history with filters
-- On-chain activity log
 - Performance metrics
-- **AI-powered portfolio optimization** (conservative/balanced/aggressive)
+- **AI-powered portfolio optimization**
 
 #### ⚡ Real-time Monitoring (7 tools)
 - Live price updates via WebSocket
 - Orderbook depth streaming
-- User order status notifications
+- Order status notifications
 - Trade execution alerts
 - Market resolution notifications
-- Subscription management
-- System health monitoring
 - Auto-reconnect with exponential backoff
 
 ### 🛡️ Enterprise-Grade Safety & Risk Management
@@ -100,67 +189,28 @@ Powered by **[Claude Code](https://claude.ai/code)** from Anthropic
 - ✅ **Confirmation Flow** - User confirmation for large orders
 - ✅ **Pre-trade Validation** - Comprehensive safety checks
 
-### ⚙️ Production-Ready Infrastructure
-
-- ✅ **L1 & L2 Authentication** - Wallet (private key) + API key auth
-- ✅ **Advanced Rate Limiting** - Token bucket algorithm respecting all Polymarket API limits
-- ✅ **EIP-712 Signing** - Secure order signatures
-- ✅ **Auto-reconnect WebSockets** - Resilient real-time connections
-- ✅ **Comprehensive Error Handling** - User-friendly error messages
-- ✅ **No Mocks** - Real Polymarket API integration throughout
-- ✅ **Full Test Coverage** - Production-grade testing with real APIs
-
----
-
-## 🌐 Web Dashboard
-
-**NEW**: Manage and monitor your Polymarket MCP Server with a modern web interface!
-
-```bash
-# Start the web dashboard
-polymarket-web
-
-# Or use the quick start script
-./start_web_dashboard.sh
-```
-
-Access at: **http://localhost:8080**
-
-### Dashboard Features
-
-- **Real-time Monitoring**: Live MCP status, WebSocket connection, and statistics
-- **Configuration Management**: Visual sliders for safety limits and trading controls
-- **Market Discovery**: Search, filter, and browse markets with live updates
-- **Market Analysis**: AI-powered analysis with recommendations and risk assessment
-- **System Monitoring**: Performance charts, rate limits, and activity logs
-- **Dark Theme**: Professional UI optimized for extended use
-
-See [WEB_DASHBOARD.md](WEB_DASHBOARD.md) for complete documentation.
-
 ---
 
 ## 🚀 Quick Start
 
-### One-Command Installation (Recommended)
+### Prerequisites
 
-**Try DEMO mode first** (no wallet needed):
+- Python 3.10+
+- For trading: Polygon wallet with private key
+- For Kalshi (Phase 1+): Kalshi account with API credentials
+
+### Installation
+
+**Try DEMO mode first** (Polymarket read-only, no wallet needed):
 ```bash
-# macOS/Linux
-curl -sSL https://raw.githubusercontent.com/caiovicentino/polymarket-mcp-server/main/quickstart.sh | bash
-
-# Or clone and run locally
-git clone https://github.com/caiovicentino/polymarket-mcp-server.git
-cd polymarket-mcp-server
-./quickstart.sh
+git clone https://github.com/swizzleshizzle/prediction-market-mcp-server.git
+cd prediction-market-mcp-server
+./install.sh --demo
 ```
 
-**Full installation** (with trading):
+**Full installation** (with Polymarket trading):
 ```bash
-# macOS/Linux
 ./install.sh
-
-# Windows
-install.bat
 ```
 
 The automated installer will:
@@ -171,58 +221,16 @@ The automated installer will:
 - ✓ Set up Claude Desktop integration
 - ✓ Test the installation
 
-### Installation Options
-
-| Method | Command | Best For |
-|--------|---------|----------|
-| **Quick Start** | `./quickstart.sh` | First-time users, testing |
-| **DEMO Mode** | `./install.sh --demo` | No wallet, read-only access |
-| **Full Install** | `./install.sh` | Production trading setup |
-| **Windows** | `install.bat` | Windows users |
-
-### DEMO Mode vs Full Mode
-
-**DEMO Mode** (No wallet required):
-- ✅ Market discovery and search
-- ✅ Real-time market analysis
-- ✅ AI-powered insights
-- ✅ Price monitoring
-- ❌ Trading disabled (read-only)
-
-**Full Mode** (Requires Polygon wallet):
-- ✅ Everything in DEMO mode
-- ✅ Place orders and execute trades
-- ✅ Portfolio management
-- ✅ Position tracking
-- ✅ Real-time trade notifications
-
-### Manual Installation
-
-If you prefer manual setup:
-
-```bash
-# Clone the repository
-git clone https://github.com/caiovicentino/polymarket-mcp-server.git
-cd polymarket-mcp-server
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install the package
-pip install -e .
-```
-
 ### Configuration
 
-**Option 1: DEMO Mode** (easiest)
+**Option 1: DEMO Mode** (Polymarket read-only)
 ```bash
 cp .env.example .env
 # Edit .env and set:
 DEMO_MODE=true
 ```
 
-**Option 2: Full Trading Mode**
+**Option 2: Full Trading Mode** (Polymarket)
 ```bash
 cp .env.example .env
 # Edit with your Polygon wallet credentials
@@ -231,19 +239,20 @@ nano .env
 
 **Required credentials (Full Mode):**
 ```env
+# Polymarket (currently working)
 POLYGON_PRIVATE_KEY=your_private_key_without_0x_prefix
 POLYGON_ADDRESS=0xYourPolygonAddress
-```
 
-**Recommended Safety Limits:**
-```env
-MAX_ORDER_SIZE_USD=1000
-MAX_TOTAL_EXPOSURE_USD=5000
-MAX_POSITION_SIZE_PER_MARKET=2000
-MIN_LIQUIDITY_REQUIRED=10000
-MAX_SPREAD_TOLERANCE=0.05
-ENABLE_AUTONOMOUS_TRADING=true
-REQUIRE_CONFIRMATION_ABOVE_USD=500
+# Kalshi (Phase 1 - coming soon)
+KALSHI_ENABLED=false  # Set true when Phase 1 complete
+KALSHI_API_KEY_ID=your_key_id
+KALSHI_PRIVATE_KEY_PATH=/path/to/kalshi_rsa.pem
+
+# Multi-platform features (Phase 3+)
+ARBITRAGE_ENABLED=false  # Future: cross-platform arbitrage
+
+# Redis (Phase 1+)
+REDIS_URL=redis://localhost:6379
 ```
 
 ### Claude Desktop Integration
@@ -251,138 +260,141 @@ REQUIRE_CONFIRMATION_ABOVE_USD=500
 Add to your Claude Desktop configuration file:
 
 **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+**Windows:** `%APPDATA%
+Claude
+otebook_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
-    "polymarket": {
+    "prediction-markets": {
       "command": "/path/to/your/venv/bin/python",
-      "args": ["-m", "polymarket_mcp.server"],
-      "cwd": "/path/to/polymarket-mcp-server",
+      "args": ["-m", "prediction_mcp.server"],
+      "cwd": "/path/to/prediction-market-mcp-server",
       "env": {
         "POLYGON_PRIVATE_KEY": "your_private_key",
-        "POLYGON_ADDRESS": "0xYourAddress"
+        "POLYGON_ADDRESS": "0xYourAddress",
+        "POLYMARKET_ENABLED": "true",
+        "KALSHI_ENABLED": "false"
       }
     }
   }
 }
 ```
 
-**Restart Claude Desktop** and you're ready to trade! 🎉
+**Restart Claude Desktop** and you're ready! 🎉
+
+---
+
+## 💡 Usage Examples
+
+### Current: Polymarket Markets
+
+Ask Claude:
+```
+"Show me the top 10 trending markets on Polymarket in the last 24 hours"
+"Analyze the trading opportunity for the government shutdown market"
+"Buy $100 of YES tokens in [market_id] at $0.65"
+"Show me all my current positions"
+```
+
+### Phase 1+: Multi-Platform Discovery
+```
+"Search for Bitcoin price markets on both Polymarket and Kalshi"
+"Compare liquidity between Polymarket and Kalshi for [topic]"
+"Show me all my positions across both platforms"
+```
+
+### Phase 3+: Cross-Platform Analysis
+```
+"Find equivalent markets for 'Trump wins 2024' across platforms"
+"Show me price discrepancies between Polymarket and Kalshi"
+"Which platform has better liquidity for crypto markets?"
+```
+
+### Phase 4+: Arbitrage Trading
+```
+"Scan for price arbitrage opportunities with >3% spread"
+"Create a strategy to capture the 5% spread on [equivalent markets]"
+"What calendar spreads are available for BTC price markets?"
+"Execute my confirmed arbitrage strategy for [market pair]"
+```
+
+### Phase 5+: AI Agent Collaboration
+```
+"What opportunities has the AI agent detected in the last hour?"
+"Review and confirm the proposed strategy #123"
+"Set AI agent to auto-execute strategies under $200"
+```
 
 ---
 
 ## 📖 Documentation
 
 ### Getting Started
-- **[Visual Installation Guide](VISUAL_INSTALL_GUIDE.md)** - Step-by-step with diagrams and screenshots
-- **[FAQ](FAQ.md)** - Frequently asked questions and troubleshooting
-- **[Setup Guide](SETUP_GUIDE.md)** - Detailed configuration instructions
-- **[Demo Video Script](DEMO_VIDEO_SCRIPT.md)** - Video tutorial scripts
+- **[Visual Installation Guide](VISUAL_INSTALL_GUIDE.md)** - Step-by-step with diagrams
+- **[FAQ](FAQ.md)** - Frequently asked questions
+- **[Setup Guide](SETUP_GUIDE.md)** - Detailed configuration
+
+### Current Implementation
+- **[Tools Reference](TOOLS_REFERENCE.md)** - Complete API for all 45 Polymarket tools
+- **[Trading Architecture](TRADING_ARCHITECTURE.md)** - System design
+- **[WebSocket Integration](WEBSOCKET_INTEGRATION.md)** - Real-time data
+
+### Multi-Platform Roadmap
+- **[Design Document](docs/plans/2025-01-20-multi-platform-arbitrage-design.md)** - Complete vision and architecture
+- **[Phase 1 Plan](docs/plans/2025-01-20-phase1-foundation-plan.md)** - Multi-platform foundation (current)
+- **[Implementation Phases](docs/plans/2025-01-20-multi-platform-arbitrage-design.md#12-implementation-phases)** - Detailed roadmap
 
 ### Developer Resources
-- **[Tools Reference](TOOLS_REFERENCE.md)** - Complete API documentation for all 45 tools
-- **[Agent Integration Guide](AGENT_INTEGRATION_GUIDE.md)** - How to integrate with your agents
-- **[Trading Architecture](TRADING_ARCHITECTURE.md)** - System design and architecture
-- **[WebSocket Integration](WEBSOCKET_INTEGRATION.md)** - Real-time data setup
-
-### Examples & Guides
-- **[Usage Examples](USAGE_EXAMPLES.py)** - Code examples for all tools
-- **[Test Examples](TEST_EXAMPLES.py)** - Example test implementations
-- **[Market Analysis Scripts](analyze_top_markets.py)** - Advanced analysis examples
-
-### System Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    POLYMARKET MCP SERVER                    │
-└─────────────────────────────────────────────────────────────┘
-
-    ┌──────────────┐
-    │   Claude     │
-    │   Desktop    │ (Natural language interface)
-    └──────┬───────┘
-           │ MCP Protocol
-           ▼
-    ┌──────────────────────────────────────────────┐
-    │           MCP Server (Python)                │
-    ├──────────────────────────────────────────────┤
-    │  ┌────────────┐  ┌──────────────────────┐   │
-    │  │  Market    │  │  Trading             │   │
-    │  │  Discovery │  │  Engine              │   │
-    │  │  (8 tools) │  │  (12 tools)          │   │
-    │  └────────────┘  └──────────────────────┘   │
-    │                                              │
-    │  ┌────────────┐  ┌──────────────────────┐   │
-    │  │  Market    │  │  Portfolio           │   │
-    │  │  Analysis  │  │  Manager             │   │
-    │  │  (10 tools)│  │  (8 tools)           │   │
-    │  └────────────┘  └──────────────────────┘   │
-    │                                              │
-    │  ┌──────────────────────────────────────┐   │
-    │  │  Real-time WebSocket (7 tools)       │   │
-    │  └──────────────────────────────────────┘   │
-    └──────────────┬───────────────────────────────┘
-                   │
-                   ▼
-    ┌──────────────────────────────────────────────┐
-    │         Polymarket Infrastructure            │
-    ├──────────────────────────────────────────────┤
-    │  • CLOB API (Order placement & management)   │
-    │  • Gamma API (Market data & analytics)       │
-    │  • WebSocket (Real-time price feeds)         │
-    │  • Polygon Chain (Settlement & execution)    │
-    └──────────────────────────────────────────────┘
-```
+- **[Agent Integration Guide](AGENT_INTEGRATION_GUIDE.md)** - Integrate with AI agents
+- **[Usage Examples](USAGE_EXAMPLES.py)** - Code examples
+- **[Contributing](CONTRIBUTING.md)** - How to contribute
 
 ---
 
-## 💡 Usage Examples
+## 🗓️ Roadmap
 
-### Market Discovery
-Ask Claude:
-```
-"Show me the top 10 trending markets on Polymarket in the last 24 hours"
-"Find all crypto markets about Bitcoin"
-"What sports markets are closing in the next 12 hours?"
-"Search for markets about Trump"
-```
+### Phase 1: Foundation (Weeks 1-2) 🚧 **Current**
+- [x] Design multi-platform architecture
+- [ ] Kalshi authentication (RSA-PSS)
+- [ ] Kalshi API client
+- [ ] 20+ Kalshi market discovery tools
+- [ ] Redis Stack integration
+- [ ] Unified configuration system
 
-### Market Analysis
-```
-"Analyze the trading opportunity for the government shutdown market"
-"Compare these three markets and tell me which has the best risk/reward"
-"What's the current spread on the Eagles vs Packers market?"
-"Show me the orderbook depth for token ID xyz"
-```
+### Phase 2: Kalshi Parity (Weeks 3-4) 📅
+- [ ] Complete Kalshi toolset (52 tools)
+- [ ] Real-time WebSocket for Kalshi
+- [ ] Event/series hierarchy tools
+- [ ] Portfolio and trading tools
 
-### Autonomous Trading
-```
-"Buy $100 of YES tokens in [market_id] at $0.65"
-"Place a limit order: sell 200 NO at $0.40 in [market]"
-"Execute a smart trade: buy YES up to $500 in [market] using best strategy"
-"Cancel all my open orders in the government shutdown market"
-"Rebalance my position in [market] to $1000 with max 2% slippage"
-```
+### Phase 3: Cross-Platform (Weeks 5-6) 📅
+- [ ] Normalized data models
+- [ ] Vector similarity search
+- [ ] Market pair management
+- [ ] Auto-matching with confidence scores
+- [ ] 8 cross-platform aggregation tools
 
-### Portfolio Management
-```
-"Show me all my current positions"
-"What's my total portfolio value?"
-"Analyze my portfolio risk and suggest improvements"
-"What's my P&L for the last 30 days?"
-"Which are my best and worst performing markets?"
-"Suggest portfolio optimizations for a conservative strategy"
-```
+### Phase 4: Arbitrage Engine (Weeks 7-8) 📅
+- [ ] Strategy object model
+- [ ] Opportunity scanner
+- [ ] Multi-leg execution engine
+- [ ] Risk management system
+- [ ] 15 arbitrage tools
 
-### Real-time Monitoring
-```
-"Subscribe to price changes for the government shutdown markets"
-"Monitor my order status in real-time"
-"Alert me when the Eagles vs Packers market moves more than 10%"
-"Show me real-time orderbook updates for [token_id]"
-```
+### Phase 5: AI Agent Foundation (Weeks 9-10) 📅
+- [ ] Permission model (read-only → autonomous)
+- [ ] Proposal/confirmation workflow
+- [ ] Audit logging
+- [ ] Basic scanner agent (advisor mode)
+
+### Phase 6: Production Polish (Weeks 11-12) 📅
+- [ ] Performance optimization
+- [ ] Complete documentation
+- [ ] Docker production stack
+- [ ] Security audit
+- [ ] Monitoring and observability
 
 ---
 
@@ -399,13 +411,11 @@ pytest
 pytest tests/test_trading_tools.py -v
 
 # Run with coverage
-pytest --cov=polymarket_mcp --cov-report=html
+pytest --cov=prediction_mcp --cov-report=html
 
-# Run market analysis demo
-python demo_mcp_tools.py
+# Integration tests (requires API credentials)
+pytest -m integration
 ```
-
-**Note:** All tests use real Polymarket APIs - NO MOCKS!
 
 ---
 
@@ -413,77 +423,49 @@ python demo_mcp_tools.py
 
 ### ⚠️ Important Security Considerations
 
-- **Private Key Protection**: Never share or commit your private key
+- **Private Key Protection**: Never share or commit your private keys
 - **Start Small**: Begin with small amounts ($50-100) to test
 - **Understand Markets**: Only trade in markets you understand
 - **Monitor Positions**: Check your positions regularly
 - **Use Safety Limits**: Configure appropriate limits for your risk tolerance
-- **Never Risk More**: Than you can afford to lose
+- **Arbitrage Risk**: Understand settlement timing and correlation assumptions
 
 ### Default Safety Limits
 
 ```env
 MAX_ORDER_SIZE_USD=1000              # Maximum $1,000 per order
-MAX_TOTAL_EXPOSURE_USD=5000          # Maximum $5,000 total exposure
-MAX_POSITION_SIZE_PER_MARKET=2000    # Maximum $2,000 per market
+MAX_TOTAL_EXPOSURE_USD=10000         # Maximum $10,000 total exposure
+MAX_POSITION_PER_MARKET_USD=2000     # Maximum $2,000 per market
 MIN_LIQUIDITY_REQUIRED=10000         # Minimum $10,000 market liquidity
 MAX_SPREAD_TOLERANCE=0.05            # Maximum 5% spread
 REQUIRE_CONFIRMATION_ABOVE_USD=500   # Confirm orders over $500
-```
 
-These can be customized in your `.env` file or Claude Desktop config.
+# Future: Arbitrage limits
+AI_DAILY_AUTONOMOUS_LIMIT_USD=500    # AI daily limit
+AI_MAX_SINGLE_TRADE_USD=100          # AI per-trade limit
+```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! We appreciate your help making this project better.
+Contributions are welcome! Whether you're:
+- Testing Phase 1 Kalshi integration
+- Suggesting arbitrage strategies
+- Improving documentation
+- Reporting bugs
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on:
-- How to report bugs
-- How to suggest features
-- Code standards and guidelines
-- Pull request process
-
-### Quick Contribution Guide
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ---
 
 ## 📊 Project Stats
 
-- **Lines of Code**: ~10,000+ (Python)
-- **Tools**: 45 comprehensive tools
+- **Lines of Code**: ~15,000+ (Python, growing)
+- **Current Tools**: 45 (Polymarket)
+- **Target Tools**: 120+ (multi-platform + arbitrage)
 - **Test Coverage**: High (real API integration)
-- **Documentation**: Comprehensive (multiple guides)
-- **Dependencies**: Modern Python packages (MCP, httpx, websockets, eth-account)
-
----
-
-## 🌐 Community
-
-### Join Our Communities
-
-- 🌾 **[Yield Hacker](https://opensea.io/collection/yield-hacker-pass-yhp)** - DeFi Innovation & Yield Farming
-- 💰 **[Renda Cripto](https://rendacripto.com.br/)** - Crypto Trading & Investments
-- 🏗️ **[Cultura Builder](https://culturabuilder.com/)** - Builder Culture & Development
-
-### Get Support
-
-- **GitHub Issues**: [Report bugs or request features](https://github.com/caiovicentino/polymarket-mcp-server/issues)
-- **GitHub Discussions**: [Ask questions and share ideas](https://github.com/caiovicentino/polymarket-mcp-server/discussions)
-- **Telegram Communities**: Get help from the community
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- **Documentation**: Comprehensive with detailed roadmap
 
 ---
 
@@ -491,15 +473,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 This project was made possible by:
 
-- **Caio Vicentino** - Creator and lead developer
+- **Caio Vicentino** - Creator of original Polymarket MCP server
+- **swizzleshizzle** - Multi-platform architecture and arbitrage system
 - **Yield Hacker Community** - DeFi expertise and testing
 - **Renda Cripto Community** - Trading insights and validation
 - **Cultura Builder Community** - Builder culture and support
-- **[Polymarket](https://polymarket.com)** - Amazing prediction market platform
-- **[Anthropic](https://anthropic.com)** - Claude and the MCP protocol
-- **[py-clob-client](https://github.com/Polymarket/py-clob-client)** - Official Polymarket SDK
-
-Special thanks to all contributors and community members who have helped improve this project!
+- **[Polymarket](https://polymarket.com)** - Prediction market platform
+- **[Kalshi](https://kalshi.com)** - Regulated prediction exchange
+- **[Anthropic](https://anthropic.com)** - Claude and MCP protocol
+- **[py-clob-client](https://github.com/Polymarket/py-clob-client)** - Polymarket SDK
+- **[kalshi-python](https://github.com/Kalshi/kalshi-python)** - Kalshi SDK
 
 ---
 
@@ -508,14 +491,16 @@ Special thanks to all contributors and community members who have helped improve
 This software is provided for educational and research purposes. Trading prediction markets involves financial risk.
 
 **Important Reminders:**
-- Cryptocurrency trading carries significant risk
+- Cryptocurrency and prediction market trading carry significant risk
 - Only invest what you can afford to lose
+- Arbitrage opportunities may be fleeting or illusory
 - Past performance does not guarantee future results
 - This is not financial advice
 - Always do your own research (DYOR)
 - Start with small amounts to learn the system
-- Understand the markets you're trading
+- Understand the markets and platforms you're trading
 - Monitor your positions regularly
+- **Phase 1+ features are under active development**
 
 The authors and contributors are not responsible for any financial losses incurred through the use of this software.
 
@@ -523,41 +508,23 @@ The authors and contributors are not responsible for any financial losses incurr
 
 ## 🔗 Links
 
-- **GitHub Repository**: [github.com/caiovicentino/polymarket-mcp-server](https://github.com/caiovicentino/polymarket-mcp-server)
+- **GitHub Repository**: [github.com/swizzleshizzle/prediction-market-mcp-server](https://github.com/swizzleshizzle/prediction-market-mcp-server)
+- **Original Polymarket Server**: [github.com/caiovicentino/polymarket-mcp-server](https://github.com/caiovicentino/polymarket-mcp-server)
 - **Polymarket**: [polymarket.com](https://polymarket.com)
-- **Polymarket Docs**: [docs.polymarket.com](https://docs.polymarket.com)
+- **Kalshi**: [kalshi.com](https://kalshi.com)
 - **MCP Protocol**: [modelcontextprotocol.io](https://modelcontextprotocol.io)
 - **Claude Code**: [claude.ai/code](https://claude.ai/code)
 
 ---
 
-## 📈 Roadmap
-
-### Current Version (v0.1.0)
-- ✅ 45 comprehensive tools
-- ✅ Real-time WebSocket monitoring
-- ✅ Safety limits and risk management
-- ✅ Complete test suite
-- ✅ Comprehensive documentation
-
-### Planned Features
-- [ ] CI/CD pipeline (GitHub Actions)
-- [ ] Enhanced AI analysis tools
-- [ ] Portfolio strategy templates
-- [ ] Market alerts and notifications
-- [ ] Performance analytics dashboard
-- [ ] Multi-wallet support
-- [ ] Advanced order types
-- [ ] Historical backtesting
-
----
-
 <div align="center">
 
-**Built with ❤️ for autonomous AI trading on Polymarket**
+**Built with ❤️ for autonomous AI trading across prediction markets**
 
-*Ready to make Claude your personal prediction market trader!* 🚀
+*Ready to make Claude your personal multi-platform prediction market trader!* 🚀
 
-[⭐ Star this repo](https://github.com/caiovicentino/polymarket-mcp-server) | [🐛 Report Bug](https://github.com/caiovicentino/polymarket-mcp-server/issues) | [✨ Request Feature](https://github.com/caiovicentino/polymarket-mcp-server/issues)
+[⭐ Star this repo](https://github.com/swizzleshizzle/prediction-market-mcp-server) | [🐛 Report Bug](https://github.com/swizzleshizzle/prediction-market-mcp-server/issues) | [✨ Request Feature](https://github.com/swizzleshizzle/prediction-market-mcp-server/issues/new)
+
+**Phase 1 In Progress** - Follow development in [docs/plans/](docs/plans/)
 
 </div>
