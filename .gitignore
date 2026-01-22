@@ -35,6 +35,13 @@ venv.bak/
 .env.local
 .env.*.local
 
+# Private Keys / Secrets
+*.pem
+*.key
+*_private_key*
+credentials.json
+secrets/
+
 # IDEs
 .vscode/
 .idea/
