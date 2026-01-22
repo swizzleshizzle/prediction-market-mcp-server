@@ -52,9 +52,9 @@ class TestPredictionMCPServer:
             server = PredictionMCPServer(config)
             tools = server.get_tools()
 
-            # 10 discovery + 11 analysis = 21 Kalshi tools
+            # 10 discovery + 11 analysis + 13 trading + 10 portfolio + 8 realtime = 52
             kalshi_tools = [t for t in tools if "kalshi" in t.name]
-            assert len(kalshi_tools) >= 21
+            assert len(kalshi_tools) == 52
 
 
 class TestServerMain:

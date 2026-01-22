@@ -11,5 +11,8 @@ Tool modules organized by category:
 
 from . import market_discovery
 from . import market_analysis
+from . import trading
+from . import portfolio
+from . import realtime
 
-__all__ = ["market_discovery", "market_analysis"]
+__all__ = ["market_discovery", "market_analysis", "trading", "portfolio", "realtime"]

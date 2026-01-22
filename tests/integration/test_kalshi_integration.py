@@ -47,7 +47,8 @@ class TestKalshiIntegration:
             server = PredictionMCPServer(config)
 
             assert server._kalshi_client is not None
-            assert len(server.get_tools()) == 21
+            # 10 discovery + 11 analysis + 13 trading + 10 portfolio + 8 realtime = 52
+            assert len(server.get_tools()) == 52
 
             await server.close()
 

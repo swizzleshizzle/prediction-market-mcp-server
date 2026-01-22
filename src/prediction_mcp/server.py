@@ -18,6 +18,9 @@ from .platforms.kalshi.config import KalshiConfig
 from .platforms.kalshi.client import KalshiClient
 from .platforms.kalshi.tools import market_discovery as kalshi_discovery
 from .platforms.kalshi.tools import market_analysis as kalshi_analysis
+from .platforms.kalshi.tools import trading as kalshi_trading
+from .platforms.kalshi.tools import portfolio as kalshi_portfolio
+from .platforms.kalshi.tools import realtime as kalshi_realtime
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +68,8 @@ class PredictionMCPServer:
         # Set client for tool modules
         kalshi_discovery.set_client(self._kalshi_client)
         kalshi_analysis.set_client(self._kalshi_client)
+        kalshi_trading.set_client(self._kalshi_client)
+        kalshi_portfolio.set_client(self._kalshi_client)
 
         logger.info("Kalshi platform initialized")
 
@@ -84,6 +89,9 @@ class PredictionMCPServer:
         if self.config.KALSHI_ENABLED:
             tools.extend(kalshi_discovery.get_tools())
             tools.extend(kalshi_analysis.get_tools())
+            tools.extend(kalshi_trading.get_tools())
+            tools.extend(kalshi_portfolio.get_tools())
+            tools.extend(kalshi_realtime.get_tools())
 
         # TODO: Add Polymarket tools when platform adapter is complete
         # if self.config.POLYMARKET_ENABLED:
@@ -117,6 +125,12 @@ class PredictionMCPServer:
                 return await kalshi_discovery.handle_tool(name, arguments)
             elif name in [t.name for t in kalshi_analysis.get_tools()]:
                 return await kalshi_analysis.handle_tool(name, arguments)
+            elif name in [t.name for t in kalshi_trading.get_tools()]:
+                return await kalshi_trading.handle_tool(name, arguments)
+            elif name in [t.name for t in kalshi_portfolio.get_tools()]:
+                return await kalshi_portfolio.handle_tool(name, arguments)
+            elif name in [t.name for t in kalshi_realtime.get_tools()]:
+                return await kalshi_realtime.handle_tool(name, arguments)
 
         # TODO: Route Polymarket tools
         # if name.startswith("polymarket_"):
