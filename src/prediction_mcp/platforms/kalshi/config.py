@@ -94,12 +94,12 @@ class KalshiConfig(BaseSettings):
                 object.__setattr__(
                     self,
                     'KALSHI_API_URL',
-                    "https://trading-api.kalshi.com/trade-api/v2"
+                    "https://api.elections.kalshi.com/trade-api/v2"
                 )
                 object.__setattr__(
                     self,
                     'KALSHI_WS_URL',
-                    "wss://trading-api.kalshi.com/trade-api/ws/v2"
+                    "wss://api.elections.kalshi.com/trade-api/ws/v2"
                 )
 
     @field_validator("KALSHI_API_KEY_ID")

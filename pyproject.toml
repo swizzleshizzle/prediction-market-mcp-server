@@ -1,9 +1,9 @@
 [project]
 name = "prediction-mcp-server"
-version = "0.2.0"
+version = "0.2.1"
 description = "Multi-platform prediction market MCP server for Polymarket and Kalshi"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 license = {text = "MIT"}
 
 dependencies = [
@@ -54,11 +54,14 @@ polymarket-mcp = "prediction_mcp.platforms.polymarket.server:main"
 kalshi-mcp = "prediction_mcp.platforms.kalshi.server:main"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/prediction_mcp"]
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+prediction_mcp = ["py.typed"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
