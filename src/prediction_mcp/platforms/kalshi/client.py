@@ -100,11 +100,11 @@ class KalshiClient:
             headers=headers,
         )
 
-            if response.status_code >= 400:
-                logger.error(f"Kalshi API error: {response.status_code} - {response.text}")
-                response.raise_for_status()
+        if response.status_code >= 400:
+            logger.error(f"Kalshi API error: {response.status_code} - {response.text}")
+            response.raise_for_status()
 
-            return response.json()
+        return response.json()
 
     # === Market Data ===
 

@@ -5,41 +5,33 @@ import logging
 from typing import Any, Dict, List, Optional
 import mcp.types as types
 
+from .client_utils import set_ws_manager, get_ws_manager
+
 logger = logging.getLogger(__name__)
-_ws_manager = None
-
-def set_ws_manager(manager) -> None:
-    global _ws_manager
-    _ws_manager = manager
-
-def _get_ws():
-    if _ws_manager is None:
-        raise RuntimeError("WebSocket manager not initialized")
-    return _ws_manager
 
 async def subscribe_orderbook(ticker: str) -> Dict:
-    return await _get_ws().subscribe("orderbook", ticker)
+    return await get_ws_manager().subscribe("orderbook", ticker)
 
 async def subscribe_trades(ticker: str) -> Dict:
-    return await _get_ws().subscribe("trades", ticker)
+    return await get_ws_manager().subscribe("trades", ticker)
 
 async def subscribe_ticker(ticker: str) -> Dict:
-    return await _get_ws().subscribe("ticker", ticker)
+    return await get_ws_manager().subscribe("ticker", ticker)
 
 async def unsubscribe(channel: str, ticker: Optional[str] = None) -> Dict:
-    return await _get_ws().unsubscribe(channel, ticker)
+    return await get_ws_manager().unsubscribe(channel, ticker)
 
 async def get_subscriptions() -> Dict:
-    return {"subscriptions": _get_ws().get_subscriptions()}
+    return {"subscriptions": get_ws_manager().get_subscriptions()}
 
 async def get_latest_update(channel: str, ticker: str) -> Dict:
-    return {"channel": channel, "ticker": ticker, "data": _get_ws().get_latest(channel, ticker)}
+    return {"channel": channel, "ticker": ticker, "data": get_ws_manager().get_latest(channel, ticker)}
 
 async def subscribe_fills() -> Dict:
-    return await _get_ws().subscribe("fills", "user")
+    return await get_ws_manager().subscribe("fills", "user")
 
 async def subscribe_orders() -> Dict:
-    return await _get_ws().subscribe("orders", "user")
+    return await get_ws_manager().subscribe("orders", "user")
 
 def get_tools() -> List[types.Tool]:
     return [

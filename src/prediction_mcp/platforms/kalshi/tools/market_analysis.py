@@ -17,28 +17,14 @@ Provides tools for analyzing Kalshi markets:
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 import mcp.types as types
 
+from .client_utils import set_client, get_client
+
 logger = logging.getLogger(__name__)
-
-# Client instance set by adapter
-_client = None
-
-
-def set_client(client) -> None:
-    """Set the Kalshi client instance."""
-    global _client
-    _client = client
-
-
-def _get_client():
-    """Get the Kalshi client instance."""
-    if _client is None:
-        raise RuntimeError("Kalshi client not initialized")
-    return _client
 
 
 # === Tool Implementation Functions ===
@@ -53,7 +39,7 @@ async def get_market_ticker(ticker: str) -> Dict[str, Any]:
     Returns:
         Price information including bid, ask, last
     """
-    client = _get_client()
+    client = get_client()
     market = await client.get_market(ticker)
 
     return {
@@ -84,7 +70,7 @@ async def get_orderbook(
     Returns:
         Orderbook with yes/no sides
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_orderbook(ticker, depth)
 
 
@@ -98,7 +84,7 @@ async def analyze_liquidity(ticker: str) -> Dict[str, Any]:
     Returns:
         Liquidity metrics including spread, depth, volume
     """
-    client = _get_client()
+    client = get_client()
 
     market = await client.get_market(ticker)
     orderbook = await client.get_orderbook(ticker, depth=10)
@@ -161,7 +147,7 @@ async def get_candlesticks(
     Returns:
         List of candlestick data
     """
-    client = _get_client()
+    client = get_client()
     candles = await client.get_market_candlesticks(ticker, period)
     return candles[:limit]
 
@@ -176,7 +162,7 @@ async def analyze_market_opportunity(ticker: str) -> Dict[str, Any]:
     Returns:
         Analysis including price, liquidity, and opportunity assessment
     """
-    client = _get_client()
+    client = get_client()
 
     market = await client.get_market(ticker)
     orderbook = await client.get_orderbook(ticker, depth=5)
@@ -235,7 +221,7 @@ async def compare_markets(tickers: List[str]) -> Dict[str, Any]:
     Returns:
         Comparison data for all markets
     """
-    client = _get_client()
+    client = get_client()
 
     comparisons = []
     for ticker in tickers[:10]:  # Limit to 10 markets
@@ -277,7 +263,7 @@ async def get_trades(
     Returns:
         List of recent trades
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_trades(ticker, limit)
 
 
@@ -291,7 +277,7 @@ async def get_spread(ticker: str) -> Dict[str, Any]:
     Returns:
         Spread information
     """
-    client = _get_client()
+    client = get_client()
     market = await client.get_market(ticker)
 
     yes_bid = market.get("yes_bid", 0) or 0
@@ -324,7 +310,7 @@ async def assess_market_risk(ticker: str) -> Dict[str, Any]:
     Returns:
         Risk assessment including liquidity, time, and price risks
     """
-    client = _get_client()
+    client = get_client()
 
     market = await client.get_market(ticker)
     orderbook = await client.get_orderbook(ticker, depth=5)
@@ -344,8 +330,8 @@ async def assess_market_risk(ticker: str) -> Dict[str, Any]:
     close_time = market.get("close_time")
     if close_time:
         try:
-            close_dt = datetime.fromtimestamp(int(close_time))
-            hours_until_close = (close_dt - datetime.utcnow()).total_seconds() / 3600
+            close_dt = datetime.fromtimestamp(int(close_time), tz=timezone.utc)
+            hours_until_close = (close_dt - datetime.now(timezone.utc)).total_seconds() / 3600
             if hours_until_close < 24:
                 risks.append({
                     "type": "time",
@@ -391,7 +377,7 @@ async def get_series(limit: int = 20) -> List[Dict[str, Any]]:
     Returns:
         List of series
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_series(limit)
 
 
@@ -402,7 +388,7 @@ async def get_exchange_schedule() -> Dict[str, Any]:
     Returns:
         Trading hours and schedule information
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_exchange_schedule()
 
 

@@ -16,28 +16,14 @@ Provides tools for finding and filtering Kalshi markets:
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
 import mcp.types as types
 
+from .client_utils import set_client, get_client
+
 logger = logging.getLogger(__name__)
-
-# Client instance set by adapter
-_client = None
-
-
-def set_client(client) -> None:
-    """Set the Kalshi client instance."""
-    global _client
-    _client = client
-
-
-def _get_client():
-    """Get the Kalshi client instance."""
-    if _client is None:
-        raise RuntimeError("Kalshi client not initialized")
-    return _client
 
 
 # === Tool Implementation Functions ===
@@ -58,7 +44,7 @@ async def search_markets(
     Returns:
         List of matching markets
     """
-    client = _get_client()
+    client = get_client()
 
     # Kalshi doesn't have direct text search, so we fetch and filter
     markets = await client.get_markets(limit=500, status=status or "open")
@@ -89,7 +75,7 @@ async def get_markets_by_volume(
     Returns:
         List of markets sorted by volume
     """
-    client = _get_client()
+    client = get_client()
 
     markets = await client.get_markets(limit=200, status="open")
 
@@ -118,7 +104,7 @@ async def get_events_by_category(
     Returns:
         List of events in category
     """
-    client = _get_client()
+    client = get_client()
 
     events = await client.get_events(limit=200, status="open")
 
@@ -147,12 +133,12 @@ async def get_markets_closing_soon(
     Returns:
         List of markets closing soon
     """
-    client = _get_client()
+    client = get_client()
 
     markets = await client.get_markets(limit=500, status="open")
 
     # Filter by close time
-    cutoff = datetime.utcnow() + timedelta(hours=hours)
+    cutoff = datetime.now(timezone.utc) + timedelta(hours=hours)
     cutoff_ts = int(cutoff.timestamp())
 
     closing_soon = [
@@ -175,7 +161,7 @@ async def get_featured_markets(
     Returns:
         List of featured markets
     """
-    client = _get_client()
+    client = get_client()
 
     # Kalshi may have a featured flag or we use volume as proxy
     markets = await client.get_markets(limit=100, status="open")
@@ -218,7 +204,7 @@ async def get_crypto_markets(
     Returns:
         List of crypto markets
     """
-    client = _get_client()
+    client = get_client()
 
     # Search for crypto-related series
     markets = await client.get_markets(limit=300, status="open")
@@ -246,7 +232,7 @@ async def get_market(ticker: str) -> Dict[str, Any]:
     Returns:
         Market details
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_market(ticker)
 
 
@@ -262,7 +248,7 @@ async def get_event(event_ticker: str) -> Dict[str, Any]:
     Returns:
         Event details
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_event(event_ticker)
 
 
@@ -280,7 +266,7 @@ async def get_event_markets(
     Returns:
         List of markets in the event
     """
-    client = _get_client()
+    client = get_client()
     return await client.get_markets(event_ticker=event_ticker, limit=limit)
 
 

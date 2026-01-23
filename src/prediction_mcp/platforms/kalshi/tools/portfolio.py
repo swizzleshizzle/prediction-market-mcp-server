@@ -2,62 +2,54 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 import mcp.types as types
 
+from .client_utils import set_client, get_client
+
 logger = logging.getLogger(__name__)
-_client = None
-
-def set_client(client) -> None:
-    global _client
-    _client = client
-
-def _get_client():
-    if _client is None:
-        raise RuntimeError("Kalshi client not initialized")
-    return _client
 
 async def get_balance() -> Dict:
-    return await _get_client().get_balance()
+    return await get_client().get_balance()
 
 async def get_positions(ticker: Optional[str] = None, settlement_status: Optional[str] = None) -> List[Dict]:
-    return await _get_client().get_positions(ticker, settlement_status)
+    return await get_client().get_positions(ticker, settlement_status)
 
 async def get_position(ticker: str) -> Dict:
-    pos = await _get_client().get_positions(ticker=ticker)
+    pos = await get_client().get_positions(ticker=ticker)
     return pos[0] if pos else {"ticker": ticker, "position": 0}
 
 async def get_portfolio_value() -> Dict:
-    bal = await _get_client().get_balance()
-    pos = await _get_client().get_positions()
+    bal = await get_client().get_balance()
+    pos = await get_client().get_positions()
     return {"balance": bal.get("balance", 0), "position_count": len(pos), "total_usd": bal.get("balance", 0) / 100}
 
 async def get_pnl(ticker: Optional[str] = None) -> Dict:
-    fills = await _get_client().get_fills(ticker=ticker, limit=500)
+    fills = await get_client().get_fills(ticker=ticker, limit=500)
     return {"trade_count": len(fills), "ticker": ticker or "all"}
 
 async def get_settlement_history(limit: int = 50) -> List[Dict]:
-    return await _get_client().get_positions(settlement_status="settled")
+    return await get_client().get_positions(settlement_status="settled")
 
 async def calculate_position_risk(ticker: str) -> Dict:
-    pos = await _get_client().get_positions(ticker=ticker)
+    pos = await get_client().get_positions(ticker=ticker)
     if not pos: return {"ticker": ticker, "has_position": False}
     count = pos[0].get("position", 0)
     return {"ticker": ticker, "position": count, "max_loss_usd": abs(count)}
 
 async def get_portfolio_exposure() -> Dict:
-    pos = await _get_client().get_positions()
+    pos = await get_client().get_positions()
     return {"position_count": len(pos), "total_exposure": sum(abs(p.get("position", 0)) for p in pos)}
 
 async def get_margin_requirements() -> Dict:
-    bal = await _get_client().get_balance()
+    bal = await get_client().get_balance()
     return {"balance": bal.get("balance", 0), "available": bal.get("available_balance", 0)}
 
 async def export_portfolio(format: str = "json") -> Dict:
-    bal = await _get_client().get_balance()
-    pos = await _get_client().get_positions()
-    return {"exported_at": datetime.utcnow().isoformat(), "balance": bal, "positions": pos}
+    bal = await get_client().get_balance()
+    pos = await get_client().get_positions()
+    return {"exported_at": datetime.now(timezone.utc).isoformat(), "balance": bal, "positions": pos}
 
 def get_tools() -> List[types.Tool]:
     return [
