@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "prediction-market": {
+      "command": "python",
+      "args": ["-m", "src.prediction_mcp.server"],
+      "cwd": "C:\\Users\\mlgbr\\Desktop\\Projects\\prediction-market-mcp-server"
+    }
+  }
+}

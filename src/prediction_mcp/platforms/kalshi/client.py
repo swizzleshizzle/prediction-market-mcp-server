@@ -80,19 +80,23 @@ class KalshiClient:
             Response JSON
         """
         # Get auth headers
-        body_str = ""
+        # IMPORTANT: Kalshi does NOT include body in signature
+        content = None
         if json:
             import json as json_lib
-            body_str = json_lib.dumps(json)
+            content = json_lib.dumps(json, separators=(',', ':')).encode('utf-8')
 
-        headers = self.auth.get_auth_headers(method, path, body_str)
+        # Signature must use full path including /trade-api/v2 prefix
+        # Note: Body is NOT included in Kalshi signature
+        full_path = f"/trade-api/v2{path}"
+        headers = self.auth.get_auth_headers(method, full_path, "")
 
         async with httpx.AsyncClient(base_url=self.base_url, timeout=30.0) as client:
             response = await client.request(
                 method=method,
                 url=path,
                 params=params,
-                json=json,
+                content=content,  # Send pre-serialized body
                 headers=headers,
             )
 
@@ -356,8 +360,11 @@ class KalshiClient:
         }
 
         if price is not None:
-            body["yes_price"] = price if side == "yes" else 100 - price
-            body["no_price"] = 100 - price if side == "yes" else price
+            # Kalshi requires exactly ONE of yes_price or no_price
+            if side == "yes":
+                body["yes_price"] = price
+            else:
+                body["no_price"] = price
 
         if expiration_ts:
             body["expiration_ts"] = expiration_ts
