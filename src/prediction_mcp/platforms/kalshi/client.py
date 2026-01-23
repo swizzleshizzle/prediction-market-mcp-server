@@ -91,14 +91,14 @@ class KalshiClient:
         full_path = f"/trade-api/v2{path}"
         headers = self.auth.get_auth_headers(method, full_path, "")
 
-        async with httpx.AsyncClient(base_url=self.base_url, timeout=30.0) as client:
-            response = await client.request(
-                method=method,
-                url=path,
-                params=params,
-                content=content,  # Send pre-serialized body
-                headers=headers,
-            )
+        client = await self._get_client()
+        response = await client.request(
+            method=method,
+            url=path,
+            params=params,
+            content=content,
+            headers=headers,
+        )
 
             if response.status_code >= 400:
                 logger.error(f"Kalshi API error: {response.status_code} - {response.text}")
@@ -399,6 +399,19 @@ class KalshiClient:
 
         result = await self._request("GET", "/portfolio/orders", params=params)
         return result.get("orders", [])
+
+    async def get_order(self, order_id: str) -> Dict[str, Any]:
+        """
+        Get a single order by ID.
+
+        Args:
+            order_id: Order ID to retrieve
+
+        Returns:
+            Order dictionary
+        """
+        result = await self._request("GET", f"/portfolio/orders/{order_id}")
+        return result.get("order", result)
 
     async def cancel_order(self, order_id: str) -> Dict[str, Any]:
         """

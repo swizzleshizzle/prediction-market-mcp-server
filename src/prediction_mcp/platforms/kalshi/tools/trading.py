@@ -72,7 +72,7 @@ async def check_order_validity(ticker: str, side: str, action: str, count: int, 
     try:
         m = await _get_client().get_market(ticker)
         if m.get("status") != "open": errors.append("Market not open")
-    except: errors.append("Market not found")
+    except Exception: errors.append("Market not found")
     return {"valid": len(errors) == 0, "errors": errors}
 
 async def simulate_order(ticker: str, side: str, action: str, count: int, price: int) -> Dict:

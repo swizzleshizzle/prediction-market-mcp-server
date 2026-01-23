@@ -11,7 +11,30 @@
       "Bash(pip install:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nrefactor: establish multi-platform architecture\n\n- Create prediction_mcp package structure\n- Add PlatformAdapter base class with normalized data models\n- Define NormalizedMarket, NormalizedOrder, NormalizedPosition\n- Update pyproject.toml with Kalshi and Redis dependencies\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__prediction-market__kalshi_get_featured_markets",
+      "mcp__prediction-market__kalshi_search_markets",
+      "mcp__prediction-market__kalshi_get_exchange_schedule",
+      "mcp__prediction-market__kalshi_get_crypto_markets",
+      "mcp__prediction-market__kalshi_get_markets_by_volume",
+      "mcp__prediction-market__kalshi_get_events_by_category",
+      "mcp__prediction-market__kalshi_get_balance",
+      "mcp__prediction-market__kalshi_get_positions",
+      "mcp__prediction-market__kalshi_get_portfolio_value",
+      "mcp__prediction-market__kalshi_get_market",
+      "mcp__prediction-market__kalshi_get_orderbook",
+      "mcp__prediction-market__kalshi_analyze_liquidity",
+      "mcp__prediction-market__kalshi_get_markets_closing_soon",
+      "mcp__prediction-market__kalshi_get_sports_markets",
+      "mcp__prediction-market__kalshi_get_event_markets",
+      "mcp__prediction-market__kalshi_simulate_order",
+      "mcp__prediction-market__kalshi_analyze_market_opportunity",
+      "mcp__prediction-market__kalshi_create_order",
+      "mcp__prediction-market__kalshi_get_orders"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "prediction-market"
+  ]
 }
