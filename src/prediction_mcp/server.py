@@ -16,11 +16,13 @@ from mcp.server.stdio import stdio_server
 from .core.config import UnifiedConfig, load_config
 from .platforms.kalshi.config import KalshiConfig
 from .platforms.kalshi.client import KalshiClient
+from .platforms.kalshi.websocket import KalshiWebSocketManager
 from .platforms.kalshi.tools import market_discovery as kalshi_discovery
 from .platforms.kalshi.tools import market_analysis as kalshi_analysis
 from .platforms.kalshi.tools import trading as kalshi_trading
 from .platforms.kalshi.tools import portfolio as kalshi_portfolio
 from .platforms.kalshi.tools import realtime as kalshi_realtime
+from .platforms.kalshi.tools.client_utils import set_ws_manager
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +67,14 @@ class PredictionMCPServer:
         )
 
         self._kalshi_client = KalshiClient(kalshi_config)
+
+        # Initialize WebSocket manager (placeholder for future implementation)
+        ws_manager = KalshiWebSocketManager(
+            ws_url=kalshi_config.KALSHI_WS_URL,
+            api_key=kalshi_config.KALSHI_API_KEY_ID,
+            private_key=kalshi_config.KALSHI_PRIVATE_KEY or ""
+        )
+        set_ws_manager(ws_manager)
 
         # Set client for tool modules
         kalshi_discovery.set_client(self._kalshi_client)
