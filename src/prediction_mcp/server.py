@@ -44,6 +44,7 @@ class PredictionMCPServer:
         """
         self.config = config or load_config()
         self._kalshi_client: Optional[KalshiClient] = None
+        self._kalshi_ws_manager: Optional[KalshiWebSocketManager] = None
         self._tools_cache: Optional[List[types.Tool]] = None
         self._tool_handlers: dict = {}  # Maps tool name -> handler function
 
@@ -68,13 +69,13 @@ class PredictionMCPServer:
 
         self._kalshi_client = KalshiClient(kalshi_config)
 
-        # Initialize WebSocket manager (placeholder for future implementation)
-        ws_manager = KalshiWebSocketManager(
+        # Initialize WebSocket manager
+        self._kalshi_ws_manager = KalshiWebSocketManager(
             ws_url=kalshi_config.KALSHI_WS_URL,
             api_key=kalshi_config.KALSHI_API_KEY_ID,
             private_key=kalshi_config.KALSHI_PRIVATE_KEY or ""
         )
-        set_ws_manager(ws_manager)
+        set_ws_manager(self._kalshi_ws_manager)
 
         # Set client for tool modules
         kalshi_discovery.set_client(self._kalshi_client)
@@ -153,8 +154,22 @@ class PredictionMCPServer:
             text=f"Unknown tool: {name}"
         )]
 
+    async def start_websockets(self) -> None:
+        """Start WebSocket connections for real-time data."""
+        if self._kalshi_ws_manager:
+            try:
+                await self._kalshi_ws_manager.connect()
+                await self._kalshi_ws_manager.start_background_task()
+                logger.info("Kalshi WebSocket started successfully")
+            except Exception as e:
+                logger.warning(f"Failed to start Kalshi WebSocket: {e}")
+                logger.warning("Real-time tools will not be available")
+
     async def close(self) -> None:
         """Cleanup resources."""
+        if self._kalshi_ws_manager:
+            await self._kalshi_ws_manager.stop_background_task()
+
         if self._kalshi_client:
             await self._kalshi_client.close()
 
@@ -189,6 +204,9 @@ async def serve(config: Optional[UnifiedConfig] = None) -> None:
     logger.info("Starting Prediction Market MCP Server")
     logger.info(f"Enabled platforms: {prediction_server.config.get_enabled_platforms()}")
     logger.info(f"Available tools: {len(prediction_server.get_tools())}")
+
+    # Start WebSocket connections for real-time data
+    await prediction_server.start_websockets()
 
     try:
         async with stdio_server() as (read_stream, write_stream):
