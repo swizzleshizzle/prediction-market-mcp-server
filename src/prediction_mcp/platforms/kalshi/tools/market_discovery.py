@@ -47,7 +47,9 @@ async def search_markets(
     client = get_client()
 
     # Kalshi doesn't have direct text search, so we fetch and filter
-    markets = await client.get_markets(limit=500, status=status or "open")
+    # Fetch 10x requested limit (up to 500) to have reasonable search pool
+    fetch_limit = min(500, limit * 10)
+    markets = await client.get_markets(limit=fetch_limit, status=status or "open")
 
     # Filter by query
     query_lower = query.lower()
@@ -135,7 +137,9 @@ async def get_markets_closing_soon(
     """
     client = get_client()
 
-    markets = await client.get_markets(limit=500, status="open")
+    # Fetch more than requested to account for filtering, but not always 500
+    fetch_limit = min(500, limit * 20)
+    markets = await client.get_markets(limit=fetch_limit, status="open")
 
     # Filter by close time
     cutoff = datetime.now(timezone.utc) + timedelta(hours=hours)
