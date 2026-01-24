@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional
 import mcp.types as types
 
 from .client_utils import set_client, get_client
+from .tool_utils import tool_handler
 
 logger = logging.getLogger(__name__)
 
@@ -108,24 +109,21 @@ def get_tools() -> List[types.Tool]:
         types.Tool(name="kalshi_get_order_history", description="Retrieve closed order history with fills and final status. Filter by ticker or get entire history.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}, "limit": {"type": "integer"}}, "required": []}),
     ]
 
-async def handle_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextContent]:
-    try:
-        handlers = {
-            "kalshi_create_order": lambda: create_order(**arguments),
-            "kalshi_cancel_order": lambda: cancel_order(**arguments),
-            "kalshi_batch_cancel_orders": lambda: batch_cancel_orders(**arguments),
-            "kalshi_get_order": lambda: get_order(**arguments),
-            "kalshi_get_orders": lambda: get_orders(**arguments),
-            "kalshi_amend_order": lambda: amend_order(**arguments),
-            "kalshi_get_fills": lambda: get_fills(**arguments),
-            "kalshi_calculate_order_cost": lambda: calculate_order_cost(**arguments),
-            "kalshi_estimate_slippage": lambda: estimate_slippage(**arguments),
-            "kalshi_get_best_price": lambda: get_best_price(**arguments),
-            "kalshi_check_order_validity": lambda: check_order_validity(**arguments),
-            "kalshi_simulate_order": lambda: simulate_order(**arguments),
-            "kalshi_get_order_history": lambda: get_order_history(**arguments),
-        }
-        result = await handlers[name]()
-        return [types.TextContent(type="text", text=json.dumps(result, indent=2, default=str))]
-    except Exception as e:
-        return [types.TextContent(type="text", text=json.dumps({"error": str(e)}))]
+@tool_handler
+async def handle_tool(name: str, arguments: Dict[str, Any]) -> Dict:
+    handlers = {
+        "kalshi_create_order": lambda: create_order(**arguments),
+        "kalshi_cancel_order": lambda: cancel_order(**arguments),
+        "kalshi_batch_cancel_orders": lambda: batch_cancel_orders(**arguments),
+        "kalshi_get_order": lambda: get_order(**arguments),
+        "kalshi_get_orders": lambda: get_orders(**arguments),
+        "kalshi_amend_order": lambda: amend_order(**arguments),
+        "kalshi_get_fills": lambda: get_fills(**arguments),
+        "kalshi_calculate_order_cost": lambda: calculate_order_cost(**arguments),
+        "kalshi_estimate_slippage": lambda: estimate_slippage(**arguments),
+        "kalshi_get_best_price": lambda: get_best_price(**arguments),
+        "kalshi_check_order_validity": lambda: check_order_validity(**arguments),
+        "kalshi_simulate_order": lambda: simulate_order(**arguments),
+        "kalshi_get_order_history": lambda: get_order_history(**arguments),
+    }
+    return await handlers[name]()

@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional
 import mcp.types as types
 
 from .client_utils import set_ws_manager, get_ws_manager
+from .tool_utils import tool_handler
 
 logger = logging.getLogger(__name__)
 
@@ -53,19 +54,16 @@ def get_tools() -> List[types.Tool]:
         types.Tool(name="kalshi_subscribe_orders", description="Subscribe to your personal order status updates. Receive notifications when orders are placed, canceled, or filled.", inputSchema={"type": "object", "properties": {}, "required": []}),
     ]
 
-async def handle_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextContent]:
-    try:
-        handlers = {
-            "kalshi_subscribe_orderbook": lambda: subscribe_orderbook(**arguments),
-            "kalshi_subscribe_trades": lambda: subscribe_trades(**arguments),
-            "kalshi_subscribe_ticker": lambda: subscribe_ticker(**arguments),
-            "kalshi_unsubscribe": lambda: unsubscribe(**arguments),
-            "kalshi_get_subscriptions": lambda: get_subscriptions(),
-            "kalshi_get_latest_update": lambda: get_latest_update(**arguments),
-            "kalshi_subscribe_fills": lambda: subscribe_fills(),
-            "kalshi_subscribe_orders": lambda: subscribe_orders(),
-        }
-        result = await handlers[name]()
-        return [types.TextContent(type="text", text=json.dumps(result, indent=2, default=str))]
-    except Exception as e:
-        return [types.TextContent(type="text", text=json.dumps({"error": str(e)}))]
+@tool_handler
+async def handle_tool(name: str, arguments: Dict[str, Any]) -> Dict:
+    handlers = {
+        "kalshi_subscribe_orderbook": lambda: subscribe_orderbook(**arguments),
+        "kalshi_subscribe_trades": lambda: subscribe_trades(**arguments),
+        "kalshi_subscribe_ticker": lambda: subscribe_ticker(**arguments),
+        "kalshi_unsubscribe": lambda: unsubscribe(**arguments),
+        "kalshi_get_subscriptions": lambda: get_subscriptions(),
+        "kalshi_get_latest_update": lambda: get_latest_update(**arguments),
+        "kalshi_subscribe_fills": lambda: subscribe_fills(),
+        "kalshi_subscribe_orders": lambda: subscribe_orders(),
+    }
+    return await handlers[name]()
