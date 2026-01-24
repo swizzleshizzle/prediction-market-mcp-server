@@ -15,6 +15,7 @@ Provides tools for analyzing Kalshi markets:
 - kalshi_get_exchange_schedule - Trading hours
 """
 
+import asyncio
 import json
 import logging
 from datetime import datetime, timezone
@@ -86,8 +87,10 @@ async def analyze_liquidity(ticker: str) -> Dict[str, Any]:
     """
     client = get_client()
 
-    market = await client.get_market(ticker)
-    orderbook = await client.get_orderbook(ticker, depth=10)
+    market, orderbook = await asyncio.gather(
+        client.get_market(ticker),
+        client.get_orderbook(ticker, depth=10)
+    )
 
     yes_bid = market.get("yes_bid", 0) or 0
     yes_ask = market.get("yes_ask", 0) or 0
@@ -164,8 +167,10 @@ async def analyze_market_opportunity(ticker: str) -> Dict[str, Any]:
     """
     client = get_client()
 
-    market = await client.get_market(ticker)
-    orderbook = await client.get_orderbook(ticker, depth=5)
+    market, orderbook = await asyncio.gather(
+        client.get_market(ticker),
+        client.get_orderbook(ticker, depth=5)
+    )
 
     yes_bid = market.get("yes_bid", 0) or 0
     yes_ask = market.get("yes_ask", 0) or 0
@@ -223,24 +228,29 @@ async def compare_markets(tickers: List[str]) -> Dict[str, Any]:
     """
     client = get_client()
 
+    # Fetch all markets in parallel
+    limited_tickers = tickers[:10]  # Limit to 10 markets
+    market_tasks = [client.get_market(ticker) for ticker in limited_tickers]
+    results = await asyncio.gather(*market_tasks, return_exceptions=True)
+
+    # Process results
     comparisons = []
-    for ticker in tickers[:10]:  # Limit to 10 markets
-        try:
-            market = await client.get_market(ticker)
+    for ticker, result in zip(limited_tickers, results):
+        if isinstance(result, Exception):
+            logger.warning(f"Failed to fetch market {ticker}: {result}")
             comparisons.append({
                 "ticker": ticker,
-                "title": market.get("title"),
-                "yes_bid": market.get("yes_bid"),
-                "yes_ask": market.get("yes_ask"),
-                "volume": market.get("volume"),
-                "open_interest": market.get("open_interest"),
-                "status": market.get("status"),
+                "error": str(result)
             })
-        except Exception as e:
-            logger.warning(f"Failed to fetch market {ticker}: {e}")
+        else:
             comparisons.append({
                 "ticker": ticker,
-                "error": str(e)
+                "title": result.get("title"),
+                "yes_bid": result.get("yes_bid"),
+                "yes_ask": result.get("yes_ask"),
+                "volume": result.get("volume"),
+                "open_interest": result.get("open_interest"),
+                "status": result.get("status"),
             })
 
     return {

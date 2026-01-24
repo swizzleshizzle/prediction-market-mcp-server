@@ -1,5 +1,6 @@
 """Kalshi Portfolio Tools - 10 tools for portfolio management."""
 
+import asyncio
 import json
 import logging
 from datetime import datetime, timezone
@@ -24,8 +25,10 @@ async def get_position(ticker: str) -> Dict:
 
 async def get_portfolio_value() -> Dict:
     """Calculate total portfolio value including cash and positions."""
-    bal = await get_client().get_balance()
-    pos = await get_client().get_positions()
+    bal, pos = await asyncio.gather(
+        get_client().get_balance(),
+        get_client().get_positions()
+    )
     return {"balance": bal.get("balance", 0), "position_count": len(pos), "total_usd": bal.get("balance", 0) / 100}
 
 async def get_pnl(ticker: Optional[str] = None) -> Dict:
@@ -56,8 +59,10 @@ async def get_margin_requirements() -> Dict:
 
 async def export_portfolio(format: str = "json") -> Dict:
     """Export complete portfolio snapshot in JSON format."""
-    bal = await get_client().get_balance()
-    pos = await get_client().get_positions()
+    bal, pos = await asyncio.gather(
+        get_client().get_balance(),
+        get_client().get_positions()
+    )
     return {"exported_at": datetime.now(timezone.utc).isoformat(), "balance": bal, "positions": pos}
 
 def get_tools() -> List[types.Tool]:
