@@ -101,7 +101,8 @@ class KalshiClient:
         )
 
         if response.status_code >= 400:
-            logger.error(f"Kalshi API error: {response.status_code} - {response.text}")
+            # Log status code only - avoid logging response body which may contain sensitive data
+            logger.error(f"Kalshi API error: {method} {path} returned {response.status_code}")
             response.raise_for_status()
 
         return response.json()
