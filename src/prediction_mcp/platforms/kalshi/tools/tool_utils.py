@@ -70,7 +70,9 @@ def tool_handler(func: Callable) -> Callable:
                 type="text",
                 text=json.dumps({
                     "error": str(e),
-                    "tool": name
+                    "error_type": type(e).__name__,
+                    "tool": name,
+                    "arguments": arguments
                 })
             )]
 
