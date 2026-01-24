@@ -140,12 +140,12 @@ class KalshiWebSocketManager:
             logger.info(f"Connecting to Kalshi WebSocket: {self.ws_url}")
 
             # Generate auth headers
-            extra_headers = self._generate_auth_headers()
+            auth_headers = self._generate_auth_headers()
 
             # Connect with authentication headers
             self.ws = await websockets.connect(
                 self.ws_url,
-                extra_headers=extra_headers,
+                additional_headers=auth_headers,
                 ping_interval=10,  # Kalshi uses 10-second ping
                 ping_timeout=10
             )
@@ -165,7 +165,7 @@ class KalshiWebSocketManager:
         """Disconnect WebSocket gracefully."""
         logger.info("Disconnecting Kalshi WebSocket...")
 
-        if self.ws and not self.ws.closed:
+        if self.ws and self.ws.close_code is None:
             await self.ws.close()
             logger.info("Kalshi WebSocket disconnected")
 
@@ -255,9 +255,17 @@ class KalshiWebSocketManager:
             }
         }
 
-        # Add market_ticker for market-specific channels
-        # For user-specific channels (fills, positions), omit market_ticker
-        if ticker != "user":
+        # For market-specific subscriptions, add market_ticker
+        # For user channels (fills, positions, order_group_updates), don't add market_ticker
+        # For "all markets" ticker subscription, use empty list for market_tickers
+        if ticker == "user":
+            # User-specific channel - no market_ticker needed
+            pass
+        elif ticker == "all":
+            # All markets - some channels might support this
+            pass
+        else:
+            # Specific market ticker
             message["params"]["market_ticker"] = ticker
 
         # Send subscription
@@ -303,7 +311,7 @@ class KalshiWebSocketManager:
                 if ticker != "user":
                     message["params"]["market_ticker"] = ticker
 
-                if self.ws and not self.ws.closed:
+                if self.ws and self.ws.close_code is None:
                     await self.ws.send(json.dumps(message))
 
                 del self.subscriptions[key]
@@ -435,7 +443,7 @@ class KalshiWebSocketManager:
                     continue
 
                 # Receive and process messages
-                if self.ws and not self.ws.closed:
+                if self.ws and self.ws.close_code is None:
                     try:
                         message_str = await asyncio.wait_for(self.ws.recv(), timeout=1.0)
                         message = json.loads(message_str)
