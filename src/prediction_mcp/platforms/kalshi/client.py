@@ -103,9 +103,22 @@ class KalshiClient:
         if response.status_code >= 400:
             # Log status code only - avoid logging response body which may contain sensitive data
             logger.error(f"Kalshi API error: {method} {path} returned {response.status_code}")
+
+            # Provide helpful error for rate limiting
+            if response.status_code == 429:
+                raise httpx.HTTPStatusError(
+                    "Rate limit exceeded. Please wait before retrying.",
+                    request=response.request,
+                    response=response
+                )
+
             response.raise_for_status()
 
-        return response.json()
+        try:
+            return response.json()
+        except Exception as e:
+            logger.error(f"Failed to decode JSON response from {method} {path}")
+            raise ValueError(f"Invalid JSON response from API: {e}") from e
 
     # === Market Data ===
 
