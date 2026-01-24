@@ -14,39 +14,48 @@ async def get_balance() -> Dict:
     return await get_client().get_balance()
 
 async def get_positions(ticker: Optional[str] = None, settlement_status: Optional[str] = None) -> List[Dict]:
+    """List all positions with optional filters for ticker and settlement status."""
     return await get_client().get_positions(ticker, settlement_status)
 
 async def get_position(ticker: str) -> Dict:
+    """Get detailed position information for a specific market."""
     pos = await get_client().get_positions(ticker=ticker)
     return pos[0] if pos else {"ticker": ticker, "position": 0}
 
 async def get_portfolio_value() -> Dict:
+    """Calculate total portfolio value including cash and positions."""
     bal = await get_client().get_balance()
     pos = await get_client().get_positions()
     return {"balance": bal.get("balance", 0), "position_count": len(pos), "total_usd": bal.get("balance", 0) / 100}
 
 async def get_pnl(ticker: Optional[str] = None) -> Dict:
+    """Get profit/loss for a position or entire portfolio."""
     fills = await get_client().get_fills(ticker=ticker, limit=500)
     return {"trade_count": len(fills), "ticker": ticker or "all"}
 
 async def get_settlement_history(limit: int = 50) -> List[Dict]:
+    """View history of settled positions with final outcomes."""
     return await get_client().get_positions(settlement_status="settled")
 
 async def calculate_position_risk(ticker: str) -> Dict:
+    """Analyze risk metrics for a position including max loss."""
     pos = await get_client().get_positions(ticker=ticker)
     if not pos: return {"ticker": ticker, "has_position": False}
     count = pos[0].get("position", 0)
     return {"ticker": ticker, "position": count, "max_loss_usd": abs(count)}
 
 async def get_portfolio_exposure() -> Dict:
+    """Get aggregate exposure across all positions."""
     pos = await get_client().get_positions()
     return {"position_count": len(pos), "total_exposure": sum(abs(p.get("position", 0)) for p in pos)}
 
 async def get_margin_requirements() -> Dict:
+    """View current margin requirements and available buying power."""
     bal = await get_client().get_balance()
     return {"balance": bal.get("balance", 0), "available": bal.get("available_balance", 0)}
 
 async def export_portfolio(format: str = "json") -> Dict:
+    """Export complete portfolio snapshot in JSON format."""
     bal = await get_client().get_balance()
     pos = await get_client().get_positions()
     return {"exported_at": datetime.now(timezone.utc).isoformat(), "balance": bal, "positions": pos}

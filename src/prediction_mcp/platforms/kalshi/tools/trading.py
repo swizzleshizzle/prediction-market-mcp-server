@@ -12,36 +12,45 @@ logger = logging.getLogger(__name__)
 
 # Order Management (7 tools)
 async def create_order(ticker: str, side: str, action: str, count: int, price: Optional[int] = None, order_type: str = "limit") -> Dict:
+    """Create a new limit order on a market."""
     return await get_client().create_order(ticker=ticker, side=side, action=action, type=order_type, count=count, price=price)
 
 async def cancel_order(order_id: str) -> Dict:
+    """Cancel an existing order by ID."""
     return await get_client().cancel_order(order_id)
 
 async def batch_cancel_orders(order_ids: Optional[List[str]] = None, ticker: Optional[str] = None) -> Dict:
+    """Cancel multiple orders at once by IDs or ticker."""
     return await get_client().batch_cancel_orders(order_ids, ticker)
 
 async def get_order(order_id: str) -> Dict:
+    """Get detailed information about a specific order."""
     return await get_client().get_order(order_id)
 
 async def get_orders(ticker: Optional[str] = None, status: Optional[str] = None, limit: int = 100) -> List[Dict]:
+    """List orders with optional filters for ticker and status."""
     return await get_client().get_orders(ticker, status, limit)
 
 async def amend_order(order_id: str, count: Optional[int] = None, price: Optional[int] = None) -> Dict:
+    """Modify an existing order's quantity or price."""
     body = {}
     if count: body["count"] = count
     if price: body["price"] = price
     return await get_client()._request("PATCH", f"/portfolio/orders/{order_id}", json=body)
 
 async def get_fills(ticker: Optional[str] = None, limit: int = 100) -> List[Dict]:
+    """Get order execution history with fill prices and timestamps."""
     return await get_client().get_fills(ticker, limit)
 
 # Strategy Helpers (6 tools)
 async def calculate_order_cost(ticker: str, side: str, action: str, count: int, price: int) -> Dict:
+    """Calculate total cost and potential profit for an order."""
     cost = count * price
     max_profit = count * (100 - price) if action == "buy" else count * price
     return {"ticker": ticker, "cost_cents": cost, "cost_usd": cost/100, "max_profit_usd": max_profit/100}
 
 async def estimate_slippage(ticker: str, side: str, count: int) -> Dict:
+    """Estimate price impact based on orderbook depth."""
     ob = await get_client().get_orderbook(ticker, depth=20)
     book = ob.get("yes" if side == "yes" else "no", [])
     filled, total = 0, 0
@@ -55,10 +64,12 @@ async def estimate_slippage(ticker: str, side: str, count: int) -> Dict:
     return {"fillable": filled, "avg_price": round(avg, 2), "slippage_cents": round(avg - best, 2)}
 
 async def get_best_price(ticker: str) -> Dict:
+    """Get current best bid, ask, and spread for a market."""
     m = await get_client().get_market(ticker)
     return {"yes_bid": m.get("yes_bid"), "yes_ask": m.get("yes_ask"), "spread": (m.get("yes_ask") or 0) - (m.get("yes_bid") or 0)}
 
 async def check_order_validity(ticker: str, side: str, action: str, count: int, price: int) -> Dict:
+    """Validate order parameters before submission."""
     errors = []
     if not 1 <= price <= 99: errors.append("Price must be 1-99")
     if count < 1: errors.append("Count must be >= 1")
@@ -69,6 +80,7 @@ async def check_order_validity(ticker: str, side: str, action: str, count: int, 
     return {"valid": len(errors) == 0, "errors": errors}
 
 async def simulate_order(ticker: str, side: str, action: str, count: int, price: int) -> Dict:
+    """Dry-run an order to preview cost and slippage without placing it."""
     v = await check_order_validity(ticker, side, action, count, price)
     if not v["valid"]: return {"simulated": False, "errors": v["errors"]}
     cost = await calculate_order_cost(ticker, side, action, count, price)
@@ -76,6 +88,7 @@ async def simulate_order(ticker: str, side: str, action: str, count: int, price:
     return {"simulated": True, "cost": cost, "slippage": slip}
 
 async def get_order_history(ticker: Optional[str] = None, limit: int = 100) -> List[Dict]:
+    """Retrieve closed order history with final status."""
     return await get_client().get_orders(ticker=ticker, status="closed", limit=limit)
 
 def get_tools() -> List[types.Tool]:
