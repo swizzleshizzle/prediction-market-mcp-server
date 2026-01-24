@@ -28,6 +28,28 @@ from .client_utils import set_client, get_client
 logger = logging.getLogger(__name__)
 
 
+# === Helper Functions ===
+
+def calculate_spread(yes_bid: Optional[int], yes_ask: Optional[int]) -> tuple[Optional[int], Optional[float]]:
+    """
+    Calculate spread in cents and percentage.
+
+    Args:
+        yes_bid: Best yes bid price (cents)
+        yes_ask: Best yes ask price (cents)
+
+    Returns:
+        Tuple of (spread_cents, spread_percent)
+    """
+    if not yes_bid or not yes_ask:
+        return None, None
+
+    spread_cents = yes_ask - yes_bid
+    spread_pct = (spread_cents / yes_ask * 100) if yes_ask else None
+
+    return spread_cents, spread_pct
+
+
 # === Tool Implementation Functions ===
 
 async def get_market_ticker(ticker: str) -> Dict[str, Any]:
@@ -96,8 +118,7 @@ async def analyze_liquidity(ticker: str) -> Dict[str, Any]:
     yes_ask = market.get("yes_ask", 0) or 0
 
     # Calculate spread
-    spread = yes_ask - yes_bid if yes_ask and yes_bid else None
-    spread_pct = (spread / yes_ask * 100) if spread and yes_ask else None
+    spread, spread_pct = calculate_spread(yes_bid, yes_ask)
 
     # Calculate depth at best prices
     yes_depth = sum(level[1] for level in orderbook.get("yes", [])) if orderbook.get("yes") else 0
@@ -174,7 +195,8 @@ async def analyze_market_opportunity(ticker: str) -> Dict[str, Any]:
 
     yes_bid = market.get("yes_bid", 0) or 0
     yes_ask = market.get("yes_ask", 0) or 0
-    spread = yes_ask - yes_bid if yes_ask and yes_bid else 0
+    spread, _ = calculate_spread(yes_bid, yes_ask)
+    spread = spread or 0
 
     # Simple opportunity analysis
     opportunities = []
@@ -295,7 +317,7 @@ async def get_spread(ticker: str) -> Dict[str, Any]:
     no_bid = market.get("no_bid", 0) or 0
     no_ask = market.get("no_ask", 0) or 0
 
-    yes_spread = yes_ask - yes_bid if yes_ask and yes_bid else None
+    yes_spread, _ = calculate_spread(yes_bid, yes_ask)
     no_spread = no_ask - no_bid if no_ask and no_bid else None
 
     return {
@@ -354,7 +376,8 @@ async def assess_market_risk(ticker: str) -> Dict[str, Any]:
     # Price volatility risk (based on spread)
     yes_bid = market.get("yes_bid", 0) or 0
     yes_ask = market.get("yes_ask", 0) or 0
-    spread = yes_ask - yes_bid if yes_ask and yes_bid else 0
+    spread, _ = calculate_spread(yes_bid, yes_ask)
+    spread = spread or 0
     if spread > 10:
         risks.append({
             "type": "volatility",
