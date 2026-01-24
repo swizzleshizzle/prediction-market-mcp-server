@@ -23,6 +23,7 @@ from .platforms.kalshi.tools import trading as kalshi_trading
 from .platforms.kalshi.tools import portfolio as kalshi_portfolio
 from .platforms.kalshi.tools import realtime as kalshi_realtime
 from .platforms.kalshi.tools.client_utils import set_ws_manager
+from .cross_platform import aggregation as cross_platform
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +96,12 @@ class PredictionMCPServer:
         for tool in kalshi_realtime.get_tools():
             self._tool_handlers[tool.name] = kalshi_realtime.handle_tool
 
-        logger.info("Kalshi platform initialized")
+        # Initialize cross-platform tools
+        cross_platform.set_clients(kalshi_client=self._kalshi_client)
+        for tool in cross_platform.get_tools():
+            self._tool_handlers[tool.name] = cross_platform.handle_tool
+
+        logger.info("Kalshi platform initialized with cross-platform tools")
 
     def get_tools(self) -> List[types.Tool]:
         """
@@ -116,6 +122,11 @@ class PredictionMCPServer:
             tools.extend(kalshi_trading.get_tools())
             tools.extend(kalshi_portfolio.get_tools())
             tools.extend(kalshi_realtime.get_tools())
+
+        # Add cross-platform tools (if any platform is enabled)
+        if self.config.KALSHI_ENABLED:  # or self.config.POLYMARKET_ENABLED
+            tools.extend(cross_platform.get_tools())
+            logger.info("Cross-platform aggregation tools enabled")
 
         # TODO: Add Polymarket tools when platform adapter is complete
         # if self.config.POLYMARKET_ENABLED:
