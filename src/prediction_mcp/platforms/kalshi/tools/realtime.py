@@ -6,24 +6,29 @@ from typing import Any, Dict, List, Optional
 import mcp.types as types
 
 from .client_utils import set_ws_manager, get_ws_manager
-from .tool_utils import tool_handler
+from .tool_utils import tool_handler, validate_ticker
 
 logger = logging.getLogger(__name__)
 
 async def subscribe_orderbook(ticker: str) -> Dict:
     """Subscribe to live orderbook updates for a market via WebSocket."""
+    validate_ticker(ticker)
     return await get_ws_manager().subscribe("orderbook", ticker)
 
 async def subscribe_trades(ticker: str) -> Dict:
     """Subscribe to live trade feed for a market."""
+    validate_ticker(ticker)
     return await get_ws_manager().subscribe("trades", ticker)
 
 async def subscribe_ticker(ticker: str) -> Dict:
     """Subscribe to live price ticker updates for a market."""
+    validate_ticker(ticker)
     return await get_ws_manager().subscribe("ticker", ticker)
 
 async def unsubscribe(channel: str, ticker: Optional[str] = None) -> Dict:
     """Unsubscribe from a WebSocket channel to stop receiving updates."""
+    if ticker:
+        validate_ticker(ticker)
     return await get_ws_manager().unsubscribe(channel, ticker)
 
 async def get_subscriptions() -> Dict:
@@ -32,6 +37,7 @@ async def get_subscriptions() -> Dict:
 
 async def get_latest_update(channel: str, ticker: str) -> Dict:
     """Retrieve the most recent data from a subscribed channel."""
+    validate_ticker(ticker)
     return {"channel": channel, "ticker": ticker, "data": get_ws_manager().get_latest(channel, ticker)}
 
 async def subscribe_fills() -> Dict:

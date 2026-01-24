@@ -24,6 +24,7 @@ from typing import Any, Dict, List, Optional
 import mcp.types as types
 
 from .client_utils import set_client, get_client
+from .tool_utils import validate_ticker
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,7 @@ async def get_market_ticker(ticker: str) -> Dict[str, Any]:
     Returns:
         Price information including bid, ask, last
     """
+    validate_ticker(ticker)
     client = get_client()
     market = await client.get_market(ticker)
 
@@ -93,6 +95,7 @@ async def get_orderbook(
     Returns:
         Orderbook with yes/no sides
     """
+    validate_ticker(ticker)
     client = get_client()
     return await client.get_orderbook(ticker, depth)
 
@@ -107,6 +110,7 @@ async def analyze_liquidity(ticker: str) -> Dict[str, Any]:
     Returns:
         Liquidity metrics including spread, depth, volume
     """
+    validate_ticker(ticker)
     client = get_client()
 
     market, orderbook = await asyncio.gather(
@@ -171,6 +175,7 @@ async def get_candlesticks(
     Returns:
         List of candlestick data
     """
+    validate_ticker(ticker)
     client = get_client()
     candles = await client.get_market_candlesticks(ticker, period)
     return candles[:limit]
@@ -186,6 +191,7 @@ async def analyze_market_opportunity(ticker: str) -> Dict[str, Any]:
     Returns:
         Analysis including price, liquidity, and opportunity assessment
     """
+    validate_ticker(ticker)
     client = get_client()
 
     market, orderbook = await asyncio.gather(
@@ -295,6 +301,7 @@ async def get_trades(
     Returns:
         List of recent trades
     """
+    validate_ticker(ticker)
     client = get_client()
     return await client.get_trades(ticker, limit)
 
@@ -309,6 +316,7 @@ async def get_spread(ticker: str) -> Dict[str, Any]:
     Returns:
         Spread information
     """
+    validate_ticker(ticker)
     client = get_client()
     market = await client.get_market(ticker)
 
@@ -342,6 +350,7 @@ async def assess_market_risk(ticker: str) -> Dict[str, Any]:
     Returns:
         Risk assessment including liquidity, time, and price risks
     """
+    validate_ticker(ticker)
     client = get_client()
 
     market = await client.get_market(ticker)

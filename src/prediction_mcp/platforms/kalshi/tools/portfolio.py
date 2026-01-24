@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 import mcp.types as types
 
 from .client_utils import set_client, get_client
-from .tool_utils import tool_handler
+from .tool_utils import tool_handler, validate_ticker
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +17,13 @@ async def get_balance() -> Dict:
 
 async def get_positions(ticker: Optional[str] = None, settlement_status: Optional[str] = None) -> List[Dict]:
     """List all positions with optional filters for ticker and settlement status."""
+    if ticker:
+        validate_ticker(ticker)
     return await get_client().get_positions(ticker, settlement_status)
 
 async def get_position(ticker: str) -> Dict:
     """Get detailed position information for a specific market."""
+    validate_ticker(ticker)
     pos = await get_client().get_positions(ticker=ticker)
     return pos[0] if pos else {"ticker": ticker, "position": 0}
 
@@ -34,6 +37,8 @@ async def get_portfolio_value() -> Dict:
 
 async def get_pnl(ticker: Optional[str] = None) -> Dict:
     """Get profit/loss for a position or entire portfolio."""
+    if ticker:
+        validate_ticker(ticker)
     fills = await get_client().get_fills(ticker=ticker, limit=500)
     return {"trade_count": len(fills), "ticker": ticker or "all"}
 
@@ -43,6 +48,7 @@ async def get_settlement_history(limit: int = 50) -> List[Dict]:
 
 async def calculate_position_risk(ticker: str) -> Dict:
     """Analyze risk metrics for a position including max loss."""
+    validate_ticker(ticker)
     pos = await get_client().get_positions(ticker=ticker)
     if not pos: return {"ticker": ticker, "has_position": False}
     count = pos[0].get("position", 0)

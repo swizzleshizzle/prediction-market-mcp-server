@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 import mcp.types as types
 
 from .client_utils import set_client, get_client
-from .tool_utils import tool_handler
+from .tool_utils import tool_handler, validate_ticker
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 # Order Management (7 tools)
 async def create_order(ticker: str, side: str, action: str, count: int, price: Optional[int] = None, order_type: str = "limit") -> Dict:
     """Create a new limit order on a market."""
+    validate_ticker(ticker)
     return await get_client().create_order(ticker=ticker, side=side, action=action, type=order_type, count=count, price=price)
 
 async def cancel_order(order_id: str) -> Dict:
@@ -46,12 +47,14 @@ async def get_fills(ticker: Optional[str] = None, limit: int = 100) -> List[Dict
 # Strategy Helpers (6 tools)
 async def calculate_order_cost(ticker: str, side: str, action: str, count: int, price: int) -> Dict:
     """Calculate total cost and potential profit for an order."""
+    validate_ticker(ticker)
     cost = count * price
     max_profit = count * (100 - price) if action == "buy" else count * price
     return {"ticker": ticker, "cost_cents": cost, "cost_usd": cost/100, "max_profit_usd": max_profit/100}
 
 async def estimate_slippage(ticker: str, side: str, count: int) -> Dict:
     """Estimate price impact based on orderbook depth."""
+    validate_ticker(ticker)
     ob = await get_client().get_orderbook(ticker, depth=20)
     book = ob.get("yes" if side == "yes" else "no", [])
     filled, total = 0, 0
@@ -66,11 +69,13 @@ async def estimate_slippage(ticker: str, side: str, count: int) -> Dict:
 
 async def get_best_price(ticker: str) -> Dict:
     """Get current best bid, ask, and spread for a market."""
+    validate_ticker(ticker)
     m = await get_client().get_market(ticker)
     return {"yes_bid": m.get("yes_bid"), "yes_ask": m.get("yes_ask"), "spread": (m.get("yes_ask") or 0) - (m.get("yes_bid") or 0)}
 
 async def check_order_validity(ticker: str, side: str, action: str, count: int, price: int) -> Dict:
     """Validate order parameters before submission."""
+    validate_ticker(ticker)
     errors = []
     if not 1 <= price <= 99: errors.append("Price must be 1-99")
     if count < 1: errors.append("Count must be >= 1")
