@@ -31,7 +31,8 @@
       "mcp__prediction-market__kalshi_analyze_market_opportunity",
       "mcp__prediction-market__kalshi_create_order",
       "mcp__prediction-market__kalshi_get_orders",
-      "WebFetch(domain:docs.kalshi.com)"
+      "WebFetch(domain:docs.kalshi.com)",
+      "Bash(git push)"
     ]
   },
   "enableAllProjectMcpServers": true,

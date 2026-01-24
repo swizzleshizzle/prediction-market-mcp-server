@@ -231,14 +231,16 @@ class KalshiWebSocketManager:
         if not self.connected:
             raise RuntimeError("WebSocket not connected. Call connect() first.")
 
-        # Map our simplified channel names to Kalshi's channel names
+        # Map our simplified channel names to Kalshi's exact channel names
+        # Note: Kalshi docs show inconsistent naming (ticker vs market_ticker, etc.)
+        # Using names from working examples in quick start guide
         channel_map = {
-            "orderbook": "orderbook_delta",
-            "ticker": "ticker",
-            "trades": "trades",
-            "fills": "fills",
-            "orders": "positions",  # Kalshi uses "positions" for order updates
-            "positions": "positions"
+            "orderbook": "orderbook_delta",  # From quick start examples
+            "ticker": "ticker",  # From quick start examples
+            "trades": "trade",  # Kalshi uses "trade" not "trades"
+            "fills": "fill",  # Kalshi uses "fill" not "fills"
+            "orders": "order",  # Kalshi uses "order" for order updates
+            "positions": "market_positions"  # From channel list
         }
 
         kalshi_channel = channel_map.get(channel, channel)
@@ -392,7 +394,14 @@ class KalshiWebSocketManager:
 
     def _infer_channel(self, msg_data: Dict[str, Any]) -> str:
         """Infer channel type from message data."""
-        # Kalshi messages include hints about their type
+        # Kalshi messages may include channel hints
+        # Try to use the 'type' or 'channel' field if present
+        if "type" in msg_data:
+            return msg_data["type"]
+        if "channel" in msg_data:
+            return msg_data["channel"]
+
+        # Otherwise infer from content
         if "bids" in msg_data and "asks" in msg_data:
             return "orderbook"
         elif "yes_bid" in msg_data and "yes_ask" in msg_data:

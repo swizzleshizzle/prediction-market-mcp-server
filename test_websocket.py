@@ -61,9 +61,9 @@ async def test_websocket():
         print(f"      Background task started")
         print()
 
-        # Test 3: Subscribe to fills (user-specific channel)
-        print("[3/8] Subscribing to fills channel...")
-        result = await ws_manager.subscribe("fills", "user")  # User-specific channel
+        # Test 3: Subscribe to ticker (all markets)
+        print("[3/8] Subscribing to ticker channel (all markets)...")
+        result = await ws_manager.subscribe("ticker", "all")  # Maps to "ticker"
         print(f"      Subscribed: {result}")
         print()
 
@@ -92,7 +92,7 @@ async def test_websocket():
 
         # Test 7: Unsubscribe
         print("[7/8] Unsubscribing...")
-        result = await ws_manager.unsubscribe("fills", "user")
+        result = await ws_manager.unsubscribe("ticker", "all")
         print(f"      Unsubscribed: {result}")
         print()
 
