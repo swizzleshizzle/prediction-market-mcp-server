@@ -43,6 +43,7 @@ class PredictionMCPServer:
         self.config = config or load_config()
         self._kalshi_client: Optional[KalshiClient] = None
         self._tools_cache: Optional[List[types.Tool]] = None
+        self._tool_handlers: dict = {}  # Maps tool name -> handler function
 
         # Initialize platform clients
         self._init_platforms()
@@ -70,6 +71,18 @@ class PredictionMCPServer:
         kalshi_analysis.set_client(self._kalshi_client)
         kalshi_trading.set_client(self._kalshi_client)
         kalshi_portfolio.set_client(self._kalshi_client)
+
+        # Build tool handler lookup
+        for tool in kalshi_discovery.get_tools():
+            self._tool_handlers[tool.name] = kalshi_discovery.handle_tool
+        for tool in kalshi_analysis.get_tools():
+            self._tool_handlers[tool.name] = kalshi_analysis.handle_tool
+        for tool in kalshi_trading.get_tools():
+            self._tool_handlers[tool.name] = kalshi_trading.handle_tool
+        for tool in kalshi_portfolio.get_tools():
+            self._tool_handlers[tool.name] = kalshi_portfolio.handle_tool
+        for tool in kalshi_realtime.get_tools():
+            self._tool_handlers[tool.name] = kalshi_realtime.handle_tool
 
         logger.info("Kalshi platform initialized")
 
@@ -119,23 +132,12 @@ class PredictionMCPServer:
         Returns:
             List of TextContent with results
         """
-        # Route Kalshi tools
-        if name.startswith("kalshi_"):
-            if name in [t.name for t in kalshi_discovery.get_tools()]:
-                return await kalshi_discovery.handle_tool(name, arguments)
-            elif name in [t.name for t in kalshi_analysis.get_tools()]:
-                return await kalshi_analysis.handle_tool(name, arguments)
-            elif name in [t.name for t in kalshi_trading.get_tools()]:
-                return await kalshi_trading.handle_tool(name, arguments)
-            elif name in [t.name for t in kalshi_portfolio.get_tools()]:
-                return await kalshi_portfolio.handle_tool(name, arguments)
-            elif name in [t.name for t in kalshi_realtime.get_tools()]:
-                return await kalshi_realtime.handle_tool(name, arguments)
+        # Use efficient tool handler lookup
+        handler = self._tool_handlers.get(name)
+        if handler:
+            return await handler(name, arguments)
 
-        # TODO: Route Polymarket tools
-        # if name.startswith("polymarket_"):
-        #     return await polymarket_tools.handle_tool(name, arguments)
-
+        # Tool not found
         return [types.TextContent(
             type="text",
             text=f"Unknown tool: {name}"

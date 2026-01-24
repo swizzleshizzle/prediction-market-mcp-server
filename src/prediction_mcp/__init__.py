@@ -7,5 +7,5 @@ Supports:
 - Cross-platform arbitrage and aggregation
 """
 
-__version__ = "0.2.0"
-__all__ = ["platforms", "core", "arbitrage"]
+__version__ = "0.2.1"
+__all__ = ["platforms", "core", "server"]

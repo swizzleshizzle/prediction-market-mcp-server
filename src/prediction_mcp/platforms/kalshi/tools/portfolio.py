@@ -53,16 +53,16 @@ async def export_portfolio(format: str = "json") -> Dict:
 
 def get_tools() -> List[types.Tool]:
     return [
-        types.Tool(name="kalshi_get_balance", description="Get balance", inputSchema={"type": "object", "properties": {}, "required": []}),
-        types.Tool(name="kalshi_get_positions", description="Get positions", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": []}),
-        types.Tool(name="kalshi_get_position", description="Get single position", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
-        types.Tool(name="kalshi_get_portfolio_value", description="Get portfolio value", inputSchema={"type": "object", "properties": {}, "required": []}),
-        types.Tool(name="kalshi_get_pnl", description="Get PnL", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": []}),
-        types.Tool(name="kalshi_get_settlement_history", description="Get settlements", inputSchema={"type": "object", "properties": {"limit": {"type": "integer"}}, "required": []}),
-        types.Tool(name="kalshi_calculate_position_risk", description="Calculate risk", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
-        types.Tool(name="kalshi_get_portfolio_exposure", description="Get exposure", inputSchema={"type": "object", "properties": {}, "required": []}),
-        types.Tool(name="kalshi_get_margin_requirements", description="Get margin", inputSchema={"type": "object", "properties": {}, "required": []}),
-        types.Tool(name="kalshi_export_portfolio", description="Export portfolio", inputSchema={"type": "object", "properties": {"format": {"type": "string"}}, "required": []}),
+        types.Tool(name="kalshi_get_balance", description="Get account balance showing total funds, available cash, and amount locked in open positions.", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_get_positions", description="List all open positions across markets or filter by specific ticker. Shows contracts held, entry price, and current P&L.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": []}),
+        types.Tool(name="kalshi_get_position", description="Get detailed position information for a specific market including quantity, average entry, and unrealized profit/loss.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
+        types.Tool(name="kalshi_get_portfolio_value", description="Calculate total portfolio value including cash balance plus mark-to-market value of all positions.", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_get_pnl", description="Get realized and unrealized profit/loss for a specific position or entire portfolio. Includes percentage returns.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": []}),
+        types.Tool(name="kalshi_get_settlement_history", description="View history of settled positions showing final outcomes, payout amounts, and settlement dates.", inputSchema={"type": "object", "properties": {"limit": {"type": "integer"}}, "required": []}),
+        types.Tool(name="kalshi_calculate_position_risk", description="Analyze risk metrics for a position including max loss, position size as % of portfolio, and correlation exposure.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
+        types.Tool(name="kalshi_get_portfolio_exposure", description="Get aggregate exposure across all positions by category, event type, and settlement date.", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_get_margin_requirements", description="View current margin requirements and buying power. Shows how much capital is available for new positions.", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_export_portfolio", description="Export complete portfolio snapshot including positions, balances, and transaction history in JSON format.", inputSchema={"type": "object", "properties": {"format": {"type": "string"}}, "required": []}),
     ]
 
 async def handle_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextContent]:

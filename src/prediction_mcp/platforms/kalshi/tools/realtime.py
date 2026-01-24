@@ -35,14 +35,14 @@ async def subscribe_orders() -> Dict:
 
 def get_tools() -> List[types.Tool]:
     return [
-        types.Tool(name="kalshi_subscribe_orderbook", description="Subscribe to orderbook", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
-        types.Tool(name="kalshi_subscribe_trades", description="Subscribe to trades", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
-        types.Tool(name="kalshi_subscribe_ticker", description="Subscribe to ticker", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
-        types.Tool(name="kalshi_unsubscribe", description="Unsubscribe", inputSchema={"type": "object", "properties": {"channel": {"type": "string"}, "ticker": {"type": "string"}}, "required": ["channel"]}),
-        types.Tool(name="kalshi_get_subscriptions", description="List subscriptions", inputSchema={"type": "object", "properties": {}, "required": []}),
-        types.Tool(name="kalshi_get_latest_update", description="Get latest update", inputSchema={"type": "object", "properties": {"channel": {"type": "string"}, "ticker": {"type": "string"}}, "required": ["channel", "ticker"]}),
-        types.Tool(name="kalshi_subscribe_fills", description="Subscribe to fills", inputSchema={"type": "object", "properties": {}, "required": []}),
-        types.Tool(name="kalshi_subscribe_orders", description="Subscribe to orders", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_subscribe_orderbook", description="Subscribe to live orderbook updates for a market. Receive real-time bid/ask changes and depth updates via WebSocket.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
+        types.Tool(name="kalshi_subscribe_trades", description="Subscribe to live trade feed for a market. Get notified immediately when trades execute with price, size, and side.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
+        types.Tool(name="kalshi_subscribe_ticker", description="Subscribe to live price ticker updates for a market. Receive best bid/ask and last trade price in real-time.", inputSchema={"type": "object", "properties": {"ticker": {"type": "string"}}, "required": ["ticker"]}),
+        types.Tool(name="kalshi_unsubscribe", description="Unsubscribe from a WebSocket channel (orderbook, trades, ticker) to stop receiving live updates for a market.", inputSchema={"type": "object", "properties": {"channel": {"type": "string"}, "ticker": {"type": "string"}}, "required": ["channel"]}),
+        types.Tool(name="kalshi_get_subscriptions", description="List all active WebSocket subscriptions showing which markets and data feeds you're currently monitoring.", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_get_latest_update", description="Retrieve the most recent data update from a subscribed channel without waiting for next WebSocket message.", inputSchema={"type": "object", "properties": {"channel": {"type": "string"}, "ticker": {"type": "string"}}, "required": ["channel", "ticker"]}),
+        types.Tool(name="kalshi_subscribe_fills", description="Subscribe to your personal fill notifications. Get real-time alerts when your orders are executed.", inputSchema={"type": "object", "properties": {}, "required": []}),
+        types.Tool(name="kalshi_subscribe_orders", description="Subscribe to your personal order status updates. Receive notifications when orders are placed, canceled, or filled.", inputSchema={"type": "object", "properties": {}, "required": []}),
     ]
 
 async def handle_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextContent]:
