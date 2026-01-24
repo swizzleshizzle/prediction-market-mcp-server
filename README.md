@@ -3,7 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP Protocol](https://img.shields.io/badge/MCP-1.0-purple.svg)](https://modelcontextprotocol.io)
-[![Status](https://img.shields.io/badge/status-Phase_2_Complete-brightgreen.svg)](#-project-status)
+[![Status](https://img.shields.io/badge/status-Phase_3_MVP-blue.svg)](#-project-status)
 
 **🚧 Work In Progress: Evolving to Support Multiple Prediction Markets + Cross-Platform Arbitrage 🚧**
 
@@ -32,8 +32,18 @@ Unified AI-powered trading platform for Polymarket and Kalshi prediction markets
 
 **Total: 97 tools across 2 platforms** 🎉
 
-### 🚀 **Next: Phase 3** - Cross-Platform Arbitrage
-- **Phase 3**: Cross-platform market matching & aggregation (8 tools)
+### 🚀 **Phase 3 STARTED**: Cross-Platform Arbitrage (MVP Complete!)
+**5 cross-platform tools** now operational:
+- ✅ `search_all_markets` - Search both platforms simultaneously
+- ✅ `compare_prices` - Price comparison across platforms
+- ✅ `find_price_discrepancies` - **Arbitrage opportunity scanner!**
+- ✅ `unified_portfolio` - Combined portfolio view
+- ✅ `create_market_pair` - Manual market linking
+
+**Total: 102 tools (97 platform + 5 cross-platform)** 🚀
+
+### 📅 **Next Steps**
+- **Phase 3 Remaining**: Redis market pairs, AI matching (3 tools)
 - **Phase 4**: Arbitrage engine with strategy execution (15 tools)
 - **Phase 5**: AI agent foundation for autonomous trading
 - **Phase 6**: Production polish and deployment
@@ -61,7 +71,14 @@ See [docs/plans/](docs/plans/) for detailed roadmap.
 - ✅ Real-time data subscriptions (WebSocket ready)
 - ✅ Production API with RSA-PSS authentication
 
-**97 total tools** across both platforms - all accessible through natural language with Claude!
+### Cross-Platform Arbitrage (5 tools) ⭐ NEW!
+- ✅ Search all markets across both platforms at once
+- ✅ Compare prices for equivalent markets
+- ✅ **Find arbitrage opportunities** with profit analysis
+- ✅ Unified portfolio view (total value across platforms)
+- ✅ Manual market pairing for tracking
+
+**102 total tools** across platforms + cross-platform - all accessible through natural language with Claude!
 
 Example queries:
 ```
@@ -69,6 +86,11 @@ Example queries:
 "What's the current spread on KXBTC-24JAN-B95000?"
 "Place a limit buy order for 50 YES tokens at $0.65"
 "Show my P&L for all Kalshi positions"
+
+# NEW Cross-Platform Queries:
+"Search for Bitcoin markets on both Kalshi and Polymarket"
+"Find arbitrage opportunities with at least 3% spread"
+"Show me my unified portfolio across all platforms"
 ```
 
 ---
@@ -405,12 +427,15 @@ Ask Claude:
 - [x] Portfolio and trading tools (13 + 10 tools)
 - [x] Market analysis tools (11 tools)
 
-### Phase 3: Cross-Platform (Current) 🚧
-- [ ] Normalized data models
-- [ ] Vector similarity search
-- [ ] Market pair management
+### Phase 3: Cross-Platform 🚧 **In Progress - MVP Complete!**
+- [x] Cross-platform search aggregation
+- [x] Price comparison across platforms
+- [x] Arbitrage opportunity scanner
+- [x] Unified portfolio view
+- [x] Market pair creation (manual)
+- [ ] Redis-backed market pairs (persistent storage)
+- [ ] AI-powered market matching (vector similarity)
 - [ ] Auto-matching with confidence scores
-- [ ] 8 cross-platform aggregation tools
 
 ### Phase 4: Arbitrage Engine (Weeks 7-8) 📅
 - [ ] Strategy object model
